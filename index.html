@@ -373,5 +373,6 @@ render=function(){
 };
 openLesson=cycleOpenLesson;
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
+render();
 
 </script></body></html>

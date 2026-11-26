@@ -42,7 +42,7 @@ button{cursor:pointer;font-weight:700}button.primary{background:var(--blue);colo
 <button id="applySelection" class="primary" type="button">Valider ma sélection</button>
 </div>
 <div class="layout"><aside class="sidebar">
-<button class="navbtn active" data-page="home">🏠 Accueil</button><button class="navbtn" data-page="courses">📚 Mes chapitres</button><button class="navbtn" data-page="practice">✍️ S’entraîner</button><button class="navbtn" data-page="evaluation">⏱️ Évaluations</button><button class="navbtn" data-page="corrections">💡 Corrections</button><button class="navbtn" data-page="vocab">🔤 Vocabulaire</button><button class="navbtn" data-page="progress">📈 Notes & moyennes</button>
+<button class="navbtn active" data-page="home">🏠 Accueil</button><button class="navbtn" data-page="courses">📚 Mes chapitres</button><button class="navbtn" data-page="practice">🧩 Exercices libres</button><button class="navbtn" data-page="evaluation">⏱️ Évaluations</button><button class="navbtn" data-page="corrections">💡 Corrections</button><button class="navbtn" data-page="vocab">🔤 Vocabulaire</button><button class="navbtn" data-page="progress">📈 Notes & moyennes</button>
 </aside><section class="content" id="view"></section></div>
 <div class="footer">CYCLE+ est une plateforme de révision en développement. Les contenus sont des supports d’entraînement indicatifs et doivent être comparés aux cours et objectifs donnés par les enseignants du Cycle à Genève. Les contenus sont des fiches de révision originales et indicatives, organisées par année. Ils ne remplacent pas les moyens d’enseignement, les listes de vocabulaire et les objectifs communiqués par les enseignants.</div>
 </main>
@@ -271,7 +271,7 @@ function gradeHTML(){if(!grades.length)return "<p class='muted'>Aucune note ajou
 function addGrade(){let name=$("#gradeName").value.trim()||"Évaluation",score=Number($("#gradeScore").value),weight=Number($("#gradeWeight").value),sum=grades.reduce((s,g)=>s+g.weight,0);if(!Number.isFinite(score)||score<1||score>6||!Number.isFinite(weight)||weight<=0||sum+weight>100){alert("Vérifie la note (1 à 6) et le coefficient. Le total ne peut pas dépasser 100 %.");return}grades.push({name,score,weight});saveGrades();render()}
 $("#year").addEventListener("change",()=>{let y=$("#year").value;$("#path").innerHTML=(y==="9e"?["R1","R2","R3"]:["CT","LC","LS"]).map(x=>`<option>${x}</option>`).join("")});
 ["path","subject"].forEach(id=>$("#"+id).addEventListener("change",()=>{}));
-$("#applySelection").addEventListener("click",()=>{qi=0;word=0;practiceAnswers={};practiceValidated={};clearInterval(timerId);timerId=null;evalState=null;window.vocabTheme='Tous';window.vocabReviewMode=false;render()});
+$("#applySelection").addEventListener("click",()=>{qi=0;word=0;practiceAnswers={};practiceValidated={};clearInterval(timerId);timerId=null;evalState=null;cycleMiniState=null;window.vocabTheme='Tous';window.vocabReviewMode=false;render()});
 document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
 render();
 

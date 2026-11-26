@@ -201,7 +201,67 @@ function subjectLabel(){return $("#subject").selectedOptions[0]?.text||$("#subje
 function shuffle(items){let a=[...items];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function key(){return $("#year").value+"_"+$("#path").value+"_"+$("#subject").value+"_T"+$("#term").value}
 function chapters(){let y=$("#year").value,sub=$("#subject").value,base=(curriculum[y]&&curriculum[y][sub])||data[sub]||[],extra=(extraLessons[y]&&extraLessons[y][sub])||[],all=[...base,...extra],term=$("#term").value;return all.filter((c,i)=>String(c.trimestre||((i%3)+1))===term)}
-function allQuestions(){return chapters().map((c,i)=>({...c,chapterIndex:i}));}
+const extraQuestionBank = {
+'10e': {
+ maths: [
+ {trimestre:1,t:'Calcul littéral et distributivité',level:'Application',q:'Développe 5(2x − 3).',a:['10x − 15','10x − 3','7x − 15'],c:0,e:'On distribue 5 : 5×2x = 10x et 5×(−3) = −15.'},
+ {trimestre:1,t:'Équations du premier degré',level:'Application',q:'Résous : 4x + 3 = 19.',a:['x = 4','x = 5','x = 16'],c:0,e:'On soustrait 3 : 4x = 16, puis on divise par 4.'},
+ {trimestre:1,t:'Fonctions et graphiques',level:'Application',q:'Pour f(x)=2x−1, calcule f(6).',a:['11','12','13'],c:0,e:'f(6)=2×6−1=11.'},
+ {trimestre:2,t:'Pythagore',level:'Application',q:'Un triangle rectangle a une hypoténuse de 13 cm et un côté de 5 cm. L’autre côté mesure…',a:['12 cm','8 cm','18 cm'],c:0,e:'a²=13²−5²=169−25=144, donc a=12 cm.'},
+ {trimestre:2,t:'Thalès et agrandissements',level:'Application',q:'Une longueur de 7 cm est agrandie avec un coefficient 2.5. Quelle est la nouvelle longueur ?',a:['17,5 cm','9,5 cm','14 cm'],c:0,e:'7×2,5=17,5 cm.'},
+ {trimestre:3,t:'Probabilités',level:'Application',q:'Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité de tirer une rouge ?',a:['3/5','2/5','1/2'],c:0,e:'Il y a 3 issues rouges sur 5 boules au total.'}
+ ],
+ fr: [
+ {trimestre:1,t:'Classes grammaticales',level:'Grammaire',q:'Dans « Elle court rapidement », quelle est la nature de « rapidement » ?',a:['Adverbe','Adjectif','Nom'],c:0,e:'Rapidement précise la manière dont elle court : c’est un adverbe.'},
+ {trimestre:1,t:'Fonctions dans la phrase',level:'Grammaire',q:'Dans « Léa mange une pomme », quelle est la fonction de « une pomme » ?',a:['COD','Sujet','COI'],c:0,e:'On demande « Léa mange quoi ? » : une pomme est COD.'},
+ {trimestre:2,t:'Accord du participe passé',level:'Orthographe',q:'Complète : « Les lettres que j’ai ___ sont longues. »',a:['écrites','écrit','écrite'],c:0,e:'Le COD « que » reprend « les lettres » et est placé avant : féminin pluriel.'},
+ {trimestre:2,t:'Conjugaison',level:'Conjugaison',q:'Quel est le passé simple de « nous finissons » ?',a:['nous finîmes','nous finissions','nous finirons'],c:0,e:'Le passé simple de finir à la première personne du pluriel est nous finîmes.'},
+ {trimestre:3,t:'Types et formes de phrases',level:'Grammaire',q:'« Ne viens-tu pas demain ? » est une phrase…',a:['interrogative et négative','déclarative et négative','impérative'],c:0,e:'La phrase pose une question et contient la négation ne… pas.'}
+ ],
+ en: [
+ {trimestre:1,t:'Present simple',level:'Grammar',q:'Choose the correct form: “My brother ___ football twice a week.”',a:['plays','play','playing'],c:0,e:'With he/she/it, add -s in the present simple.'},
+ {trimestre:1,t:'Present continuous',level:'Grammar',q:'Complete: “They ___ dinner at the moment.”',a:['are having','have','is having'],c:0,e:'At the moment signals present continuous: are + verb-ing.'},
+ {trimestre:2,t:'Past simple',level:'Grammar',q:'What is the past simple of “buy” ?',a:['bought','buyed','buy'],c:0,e:'Buy is irregular: buy – bought – bought.'},
+ {trimestre:2,t:'Comparatives',level:'Grammar',q:'Complete: “A train is usually ___ than a bicycle.”',a:['faster','fastest','more fast'],c:0,e:'For the short adjective fast, use faster + than.'},
+ {trimestre:3,t:'Conditionals',level:'Grammar',q:'Complete: “If I finish early, I ___ you.”',a:['will call','would called','calling'],c:0,e:'First conditional: if + present simple, will + base verb.'}
+ ],
+ de: [
+ {trimestre:1,t:'Datif',level:'Grammatik',q:'Complète : « Ich fahre mit ___ Freundin. »',a:['meiner','meine','meinen'],c:0,e:'Mit demande le datif ; Freundin est féminin : meiner Freundin.'},
+ {trimestre:1,t:'Vocabulaire scolaire',level:'Wortschatz',q:'Que signifie « die Prüfung » ?',a:['l’examen','la pause','le cahier'],c:0,e:'Die Prüfung signifie l’examen.'},
+ {trimestre:2,t:'Perfekt',level:'Grammatik',q:'Complète : « Wir ___ gestern Fußball gespielt. »',a:['haben','sind','hat'],c:0,e:'Spielen forme le Perfekt avec haben : wir haben gespielt.'},
+ {trimestre:2,t:'Subordonnées avec weil',level:'Satzbau',q:'Choisis la phrase correcte.',a:['Ich lerne, weil ich morgen eine Prüfung habe.','Ich lerne, weil ich habe morgen eine Prüfung.','Ich lerne weil morgen ich eine Prüfung habe.'],c:0,e:'Après weil, le verbe conjugué se place à la fin.'},
+ {trimestre:3,t:'Exprimer une opinion',level:'Kommunikation',q:'Que signifie « Meiner Meinung nach » ?',a:['À mon avis','À mon école','À mon retour'],c:0,e:'Meiner Meinung nach signifie à mon avis.'}
+ ],
+ physics: [
+ {trimestre:1,t:'Grandeurs et unités',level:'Physique',q:'Quelle est l’unité SI de la force ?',a:['le newton (N)','le joule (J)','le watt (W)'],c:0,e:'La force se mesure en newtons.'},
+ {trimestre:2,t:'Électricité',level:'Physique',q:'Quel appareil mesure l’intensité du courant ?',a:['un ampèremètre','un voltmètre','un thermomètre'],c:0,e:'L’ampèremètre mesure l’intensité du courant électrique.'},
+ {trimestre:2,t:'Circuits électriques',level:'Physique',q:'Dans un circuit en série, si une lampe est retirée, que se passe-t-il généralement ?',a:['Le circuit est ouvert et les autres lampes s’éteignent.','Les autres lampes brillent davantage.','Le courant continue sans changement.'],c:0,e:'En série, tous les composants partagent une seule boucle : l’ouverture coupe le courant.'},
+ {trimestre:3,t:'Énergie',level:'Physique',q:'Quelle est l’unité de l’énergie dans le système international ?',a:['le joule (J)','le volt (V)','l’ampère (A)'],c:0,e:'L’énergie se mesure en joules.'}
+ ],
+ biology: [
+ {trimestre:1,t:'Cellule',level:'Biologie',q:'Quelle structure contient l’essentiel de l’information génétique dans une cellule humaine ?',a:['le noyau','la membrane','le cytoplasme'],c:0,e:'Le noyau contient les chromosomes et l’ADN.'},
+ {trimestre:1,t:'Organes et systèmes',level:'Biologie',q:'Quel organe pompe le sang dans le corps ?',a:['le cœur','le foie','le poumon'],c:0,e:'Le cœur propulse le sang dans les vaisseaux.'},
+ {trimestre:2,t:'Respiration',level:'Biologie',q:'Quel gaz l’organisme prélève-t-il principalement dans l’air pour la respiration cellulaire ?',a:['le dioxygène','le dioxyde de carbone','l’azote'],c:0,e:'Les cellules utilisent le dioxygène pour libérer de l’énergie à partir des nutriments.'},
+ {trimestre:3,t:'Écosystèmes',level:'Biologie',q:'Dans une chaîne alimentaire, quel est généralement le rôle d’une plante verte ?',a:['producteur','prédateur supérieur','décomposeur'],c:0,e:'Les plantes produisent leur matière organique grâce à la photosynthèse.'}
+ ],
+ histoire: [
+ {trimestre:1,t:'Repères historiques',level:'Histoire',q:'En quelle année débute la Révolution française ?',a:['1789','1815','1848'],c:0,e:'La Révolution française commence en 1789.'},
+ {trimestre:2,t:'Révolution industrielle',level:'Histoire',q:'Quelle énergie a joué un rôle majeur dans la première industrialisation ?',a:['la vapeur','l’énergie nucléaire','l’énergie solaire photovoltaïque'],c:0,e:'La machine à vapeur a fortement développé les transports et les usines.'},
+ {trimestre:3,t:'Sources historiques',level:'Méthode',q:'Une lettre écrite à l’époque étudiée est une source…',a:['primaire','secondaire','imaginaire'],c:0,e:'Une source primaire provient directement de l’époque ou des acteurs étudiés.'}
+ ],
+ geo: [
+ {trimestre:1,t:'Cartographie',level:'Géographie',q:'Sur une carte à l’échelle 1:100 000, 1 cm représente…',a:['1 km','100 km','100 m'],c:0,e:'100 000 cm = 1 km.'},
+ {trimestre:2,t:'Population',level:'Géographie',q:'Comment appelle-t-on le nombre d’habitants par km² ?',a:['la densité de population','le taux de natalité','la migration nette'],c:0,e:'La densité rapporte le nombre d’habitants à une surface.'},
+ {trimestre:3,t:'Climat',level:'Géographie',q:'Quel élément décrit une moyenne météorologique calculée sur une longue période ?',a:['le climat','la météo du jour','une précipitation isolée'],c:0,e:'Le climat décrit les conditions moyennes sur une longue période.'}
+ ],
+ info: [
+ {trimestre:1,t:'Fichiers et formats',level:'Informatique',q:'Quelle extension correspond généralement à un document PDF ?',a:['.pdf','.exe','.mp3'],c:0,e:'Le format PDF est destiné à préserver la mise en page des documents.'},
+ {trimestre:2,t:'Réseaux',level:'Informatique',q:'Quel équipement relie plusieurs appareils d’un réseau local ?',a:['un commutateur (switch)','une imprimante','un écran'],c:0,e:'Un switch relie des appareils au sein d’un réseau local Ethernet.'},
+ {trimestre:3,t:'Sécurité numérique',level:'Informatique',q:'Quel est le meilleur réflexe face à un lien inattendu demandant ton mot de passe ?',a:['ne pas cliquer et vérifier auprès de la source officielle','entrer rapidement le mot de passe','transférer le lien à ses contacts'],c:0,e:'Un lien inattendu peut être une tentative d’hameçonnage : vérifie par un canal officiel.'}
+ ]
+}
+};
+function allQuestions(){const base=chapters().map((c,i)=>({...c,chapterIndex:i}));const extras=((extraQuestionBank[$("#year").value]||{})[$("#subject").value]||[]).filter(q=>String(q.trimestre||1)===$("#term").value);return [...base,...extras].map((q,i)=>({...q,questionIndex:i}));}
 function progress(){let total=Object.values(curriculum).reduce((n,yr)=>n+Object.values(yr).reduce((m,a)=>m+a.length,0),0)+Object.values(data).reduce((n,a)=>n+a.length,0),n=Object.keys(done).length;$("#overall").style.width=(n/total*100)+"%";$("#progressLabel").textContent=n+" chapitre(s) travaillé(s) sur "+total+" fiches actuellement disponibles."}
 function nav(){document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===page))}
 function render(){

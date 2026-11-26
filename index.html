@@ -218,8 +218,12 @@ function render(){
  if(page==="corrections"){v.innerHTML=`<h2>4. Corrections et explications</h2><p class="muted">Retrouve les questions, les bonnes réponses et les explications.</p>`+cs.map((c,i)=>`<div class="lesson"><span class="pill">${c.level}</span><h3>${c.t}</h3><p><b>${c.q}</b></p><p><b>Bonne réponse :</b> ${c.a[c.c]}</p><p class="muted">${c.e}</p><p><b>Rappel du cours :</b> ${c.lesson}</p></div>`).join("")}
  if(page==="vocab"){
  let lang=$("#subject").value,y=$("#year").value,bank=(vocabByYear[y]&&vocabByYear[y][lang])||[];
+ if(window.vocabStartedFor!==y+"_"+lang){window.vocabStartedFor=null;window.vocabThemes=null;window.vocabStarted=false;}
  if(!['de','en','la'].includes(lang)){v.innerHTML='<h2>Vocabulaire & flashcards</h2><p class="muted">Les flashcards sont disponibles pour l’allemand, l’anglais et le latin. Choisis une de ces langues en haut de la page.</p>';return}
  let themes=[...new Set(bank.map(x=>x[2]))];
+ if(!window.vocabStarted){
+  v.innerHTML='<h2>Réviser le vocabulaire · '+(lang==='de'?'Allemand':lang==='en'?'Anglais':'Latin')+' · '+y+'</h2><p class="muted">Choisis précisément les listes que tu veux travailler. Tu peux en sélectionner plusieurs.</p><div class="card"><b>Listes disponibles</b><div class="grid" style="margin-top:12px">'+themes.map((t,i)=>'<label><input type="checkbox" class="vocabSetupChoice" value="'+t.replace(/"/g,'&quot;')+'" checked> '+t+' ('+bank.filter(w=>w[2]===t).length+' mots)</label>').join('')+'</div></div><div class="controls"><button class="primary" onclick="vocabStartSelected(\'flashcards\')">Réviser avec les flashcards</button><button onclick="vocabStartSelected(\'mini\')">Faire des exercices / mini-test</button></div><p class="small muted">Les listes affichées sont les thèmes actuellement présents dans la plateforme. Les listes scolaires manquantes pourront être ajoutées à partir de tes documents.</p>';return;
+ }
  let selectedThemes=Array.isArray(window.vocabThemes)?window.vocabThemes:themes.slice();
  let themeKey=selectedThemes.length===themes.length?'Tous':selectedThemes.join('|');
  let entries=bank.map((w,i)=>({w,i})).filter(x=>selectedThemes.includes(x.w[2]));
@@ -250,6 +254,13 @@ function render(){
 }
  if(page==="progress"){let n=Object.keys(done).length;v.innerHTML=`<h2>Progression et moyennes</h2><p>Chapitres travaillés : <b>${n}</b></p><div class="progress"><i style="width:${Math.min(100,n/18*100)}%"></i></div><h3>Historique des évaluations</h3>${assessmentHistory.length?assessmentHistory.map(a=>`<div class="chapter"><div><b>${a.subject} · ${a.year} ${a.path}</b><div class="muted small">${new Date(a.date).toLocaleString("fr-CH")} · ${a.good}/${a.count} bonnes réponses · ${a.duration} min</div></div><b>${a.note.toFixed(2)}/6</b></div>`).join(""):"<p class=\"muted\">Aucune évaluation terminée pour le moment.</p>"}<h3>Calculer ta moyenne pondérée</h3><p class="muted">Entre chaque note sur 6 et son poids en pourcentage. La somme des poids doit atteindre 100 % pour obtenir une moyenne complète.</p><div class="grid"><div class="card"><label>Nom de l'évaluation<br><input id="gradeName" placeholder="Ex. Test chapitre 2"></label></div><div class="card"><label>Note sur 6<br><input id="gradeScore" type="number" min="1" max="6" step="0.1" placeholder="5.0"></label></div><div class="card"><label>Coefficient (%)<br><input id="gradeWeight" type="number" min="0" max="100" step="1" placeholder="20"></label></div></div><button class="primary" onclick="addGrade()">Ajouter la note</button><div id="gradeList">${gradeHTML()}</div><button onclick="if(confirm('Effacer toutes les notes enregistrées ?')){grades=[];saveGrades();render()}">Effacer les notes</button>`}
  progress();
+}
+function vocabStartSelected(mode){
+ const chosen=[...document.querySelectorAll('.vocabSetupChoice:checked')].map(x=>x.value);
+ if(!chosen.length){alert("Sélectionne au moins une liste de vocabulaire.");return;}
+ window.vocabThemes=chosen;window.vocabStarted=true;window.vocabStartedFor=$("#year").value+"_"+$("#subject").value;
+ if(mode==="mini"){window.cycleVocabThemes=chosen;go("mini");}
+ else{window.vocabReviewMode=false;word=0;render();}
 }
 function markVocab(known){
  if(!vocabSessionState||!vocabSessionEntries[word])return;

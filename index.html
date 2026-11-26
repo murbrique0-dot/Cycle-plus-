@@ -37,6 +37,7 @@ button{cursor:pointer;font-weight:700}button.primary{background:var(--blue);colo
 <div class="controls">
 <label>Année<select id="year"><option>9e</option><option selected>10e</option><option>11e</option></select></label>
 <label>Parcours<select id="path"><option value="CT">CT</option><option value="LC">LC</option><option value="LS" selected>LS</option></select></label>
+<label>Trimestre<select id="term"><option value="1">Trimestre 1</option><option value="2">Trimestre 2</option><option value="3">Trimestre 3</option></select></label>
 <label>Matière<select id="subject"><option value="maths">Mathématiques</option><option value="fr">Français</option><option value="en">Anglais</option><option value="de">Allemand</option><option value="la">Latin (vocabulaire)</option><option value="physics">Physique</option><option value="biology">Biologie</option><option value="histoire">Histoire</option><option value="geo">Géographie</option><option value="info">Informatique</option></select></label>
 <button id="applySelection" class="primary" type="button">Valider ma sélection</button>
 </div>
@@ -156,6 +157,37 @@ const vocabByYear = {
  }
 };
 
+const extraLessons={
+'10e':{
+maths:[
+{trimestre:1,t:'Fonctions et graphiques',level:'Algèbre',lesson:'Une fonction associe une valeur y à chaque valeur x. Pour f(x)=2x+3, remplace x par la valeur demandée. Un tableau de valeurs permet de construire le graphique.',q:'Si f(x)=2x+3, combien vaut f(4) ?',a:['11','9','14'],c:0,e:'2×4+3=11.'},
+{trimestre:1,t:'Équations du premier degré',level:'Algèbre',lesson:'Pour résoudre une équation, effectue la même opération des deux côtés. Regroupe les termes avec x puis isole x.',q:'Résous 3x+5=20.',a:['x=5','x=15','x=25'],c:0,e:'3x=15, donc x=5.'},
+{trimestre:2,t:'Théorème de Thalès',level:'Géométrie',lesson:'Lorsque des droites parallèles coupent deux sécantes, les longueurs correspondantes sont proportionnelles. Vérifie les alignements et le parallélisme avant de l’appliquer.',q:'Un segment de 4 cm est agrandi avec un rapport 1,5. Quelle longueur obtient-on ?',a:['6 cm','5,5 cm','4,5 cm'],c:0,e:'4×1,5=6 cm.'},
+{trimestre:2,t:'Puissances et notation scientifique',level:'Nombres',lesson:'10³=1000. La notation scientifique écrit un nombre sous la forme a×10ⁿ avec 1≤a<10.',q:'45 000 en notation scientifique ?',a:['4,5×10⁴','45×10³','0,45×10⁵'],c:0,e:'La virgule se déplace de quatre rangs : 4,5×10⁴.'},
+{trimestre:3,t:'Probabilités',level:'Données',lesson:'Pour des issues équiprobables, P(A)=cas favorables/cas possibles. Une probabilité est comprise entre 0 et 1.',q:'Avec un dé équilibré, probabilité d’obtenir un nombre pair ?',a:['1/2','1/6','2/3'],c:0,e:'3 résultats pairs sur 6 : 3/6=1/2.'}],
+en:[
+{trimestre:1,t:'Past simple and present perfect',level:'Grammar',lesson:'Use the past simple for a finished action at a definite past time: I visited London last year. Use the present perfect for experience or a past action connected to now: I have visited London.',q:'“I ___ my homework yesterday.”',a:['finished','have finish','has finished'],c:0,e:'Yesterday indicates a finished past time: finished.'},
+{trimestre:2,t:'Comparatives and superlatives',level:'Grammar',lesson:'Short adjectives often take -er/-est: faster, the fastest. Longer adjectives use more/the most. Good becomes better and the best.',q:'“This exercise is ___ than the last one.”',a:['easier','more easy','easiest'],c:0,e:'Easy becomes easier.'},
+{trimestre:3,t:'Giving opinions and arguments',level:'Writing',lesson:'Use In my opinion or I believe to give an opinion, because to explain, for example to illustrate and however to contrast ideas.',q:'Which linker introduces a contrast?',a:['However','Because','For example'],c:0,e:'However introduces a contrast.'}],
+de:[
+{trimestre:1,t:'Perfekt : raconter au passé',level:'Grammatik',lesson:'Le Perfekt se forme avec haben ou sein et le participe passé. Les verbes de déplacement utilisent souvent sein : ich bin gegangen.',q:'Ich ___ nach Hause gegangen.',a:['bin','habe','ist'],c:0,e:'Gehen utilise sein : ich bin gegangen.'},
+{trimestre:2,t:'Verbes avec préposition',level:'Grammatik',lesson:'Certains verbes exigent une préposition précise. On apprend le groupe complet : warten auf + accusatif.',q:'Ich warte ___ den Bus.',a:['auf','mit','von'],c:0,e:'On dit warten auf + accusatif.'},
+{trimestre:3,t:'Exprimer son avis',level:'Kommunikation',lesson:'Pour donner ton avis : Ich denke, dass… ou Meiner Meinung nach… Après dass et weil, le verbe conjugué se place à la fin.',q:'Après “weil”, où se place le verbe conjugué ?',a:['À la fin','En deuxième position','Au début'],c:0,e:'Dans la subordonnée, le verbe conjugué va à la fin.'}]},
+'11e':{
+maths:[
+{trimestre:1,t:'Systèmes de deux équations',level:'Algèbre',lesson:'Un système contient plusieurs équations à satisfaire simultanément. On peut le résoudre par substitution ou élimination. La solution vérifie toutes les équations.',q:'Si x+y=10 et x=4, combien vaut y ?',a:['6','14','4'],c:0,e:'y=10−4=6.'},
+{trimestre:1,t:'Fonctions affines',level:'Algèbre',lesson:'Une fonction affine s’écrit f(x)=ax+b. Le coefficient a donne la pente et b l’ordonnée à l’origine.',q:'Dans f(x)=−2x+7, quelle est la pente ?',a:['−2','7','2'],c:0,e:'Le coefficient de x est −2.'},
+{trimestre:2,t:'Trigonométrie',level:'Géométrie',lesson:'Dans un triangle rectangle : sin=opposé/hypoténuse, cos=adjacent/hypoténuse, tan=opposé/adjacent. Repère les côtés par rapport à l’angle choisi.',q:'Le sinus est le rapport entre…',a:['opposé et hypoténuse','adjacent et hypoténuse','opposé et adjacent'],c:0,e:'sin(angle)=opposé÷hypoténuse.'},
+{trimestre:2,t:'Factorisation',level:'Algèbre',lesson:'Factoriser transforme une somme en produit. Exemple : ax+ay=a(x+y). Un produit est nul si au moins un facteur est nul.',q:'Factorise 3x+12.',a:['3(x+4)','3(x+12)','x(3+12)'],c:0,e:'Le facteur commun est 3.'},
+{trimestre:3,t:'Statistiques : dispersion',level:'Données',lesson:'L’étendue vaut maximum−minimum. Les quartiles partagent une série ordonnée en quatre parties.',q:'Étendue de 2, 4, 7, 9 ?',a:['7','9','5'],c:0,e:'9−2=7.'}],
+en:[
+{trimestre:1,t:'First conditional',level:'Grammar',lesson:'Use If + present simple, will + base verb for a realistic future possibility: If it rains, we will stay inside.',q:'If I study, I ___ the test.',a:['will pass','passed','would passed'],c:0,e:'First conditional: present simple + will.'},
+{trimestre:2,t:'Passive voice',level:'Grammar',lesson:'The passive focuses on the action or receiver. Form: be + past participle. Past: The bridge was built.',q:'Passive form of “They built the bridge”.',a:['The bridge was built.','The bridge built.','The bridge is build.'],c:0,e:'Past passive = was/were + past participle.'},
+{trimestre:3,t:'Structuring a written text',level:'Writing',lesson:'Organise a text with an introduction, paragraphs and a conclusion. Link ideas with firstly, moreover, however and finally.',q:'Which linker adds another argument?',a:['Moreover','Although','Instead'],c:0,e:'Moreover adds another point.'}],
+de:[
+{trimestre:1,t:'Subordonnées avec dass et weil',level:'Grammatik',lesson:'Après dass et weil, le verbe conjugué se place à la fin : Ich lerne, weil ich morgen eine Prüfung habe.',q:'Ich bleibe zu Hause, weil ich krank ___.',a:['bin','ist','sein'],c:0,e:'Le verbe bin est à la fin.'},
+{trimestre:2,t:'Comparatif et superlatif',level:'Grammatik',lesson:'Le comparatif se forme souvent avec -er et le superlatif avec am … -sten. Gut devient besser, am besten.',q:'Comparatif de gut ?',a:['besser','guter','am gut'],c:0,e:'Gut devient besser.'},
+{trimestre:3,t:'Raconter un événement',level:'Kommunikation',lesson:'Utilise zuerst, dann, danach et schließlich pour organiser un récit. Pour donner ton avis : Ich finde, dass…',q:'Quel mot signifie “ensuite” ?',a:['danach','zuerst','schließlich'],c:0,e:'Danach signifie ensuite.'}]}};
 let done=JSON.parse(localStorage.getItem("cycleplus_done")||"{}");
 let grades=JSON.parse(localStorage.getItem("cycleplus_grades")||"[]");
 let assessmentHistory=JSON.parse(localStorage.getItem("cycleplus_assessments")||"[]");
@@ -167,14 +199,14 @@ function saveGrades(){localStorage.setItem("cycleplus_grades",JSON.stringify(gra
 function saveAssessments(){localStorage.setItem("cycleplus_assessments",JSON.stringify(assessmentHistory));}
 function subjectLabel(){return $("#subject").selectedOptions[0]?.text||$("#subject").value;}
 function shuffle(items){let a=[...items];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function key(){return $("#year").value+"_"+$("#path").value+"_"+$("#subject").value}
-function chapters(){let y=$("#year").value,sub=$("#subject").value;return (curriculum[y]&&curriculum[y][sub])||data[sub]||[]}
+function key(){return $("#year").value+"_"+$("#path").value+"_"+$("#subject").value+"_T"+$("#term").value}
+function chapters(){let y=$("#year").value,sub=$("#subject").value,base=(curriculum[y]&&curriculum[y][sub])||data[sub]||[],extra=(extraLessons[y]&&extraLessons[y][sub])||[],all=[...base,...extra],term=$("#term").value;return all.filter((c,i)=>String(c.trimestre||((i%3)+1))===term)}
 function allQuestions(){return chapters().map((c,i)=>({...c,chapterIndex:i}));}
 function progress(){let total=Object.values(curriculum).reduce((n,yr)=>n+Object.values(yr).reduce((m,a)=>m+a.length,0),0)+Object.values(data).reduce((n,a)=>n+a.length,0),n=Object.keys(done).length;$("#overall").style.width=(n/total*100)+"%";$("#progressLabel").textContent=n+" chapitre(s) travaillé(s) sur "+total+" fiches actuellement disponibles."}
 function nav(){document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===page))}
 function render(){
  nav(); let v=$("#view"),cs=chapters(),k=key();
- if(page==="home"){v.innerHTML=`<span class="pill">Ton espace de travail</span><h2>Bienvenue sur CYCLE+</h2><p class="muted">Sélection : <b>${$("#year").value}</b> · parcours <b>${$("#path").value}</b> · <b>${$("#subject").selectedOptions[0].text}</b>.</p><div class="grid">
+ if(page==="home"){v.innerHTML=`<span class="pill">Ton espace de travail</span><h2>Bienvenue sur CYCLE+</h2><p class="muted">Sélection : <b>${$("#year").value}</b> · parcours <b>${$("#path").value}</b> · <b>Trimestre ${$("#term").value}</b> · <b>${$("#subject").selectedOptions[0].text}</b>.</p><div class="grid">
  <div class="card"><h3>📚 1. Apprendre</h3><p class="muted">Lis le cours, les notions essentielles et les exemples.</p><button class="primary" onclick="go('courses')">Ouvrir les cours</button></div>
  <div class="card"><h3>✍️ 2. S'entraîner</h3><p class="muted">Fais des exercices et vérifie tes réponses.</p><button onclick="go('practice')">S'entraîner</button></div>
  <div class="card"><h3>✅ 3. Valider</h3><p class="muted">Lance une évaluation chronométrée.</p><button onclick="go('evaluation')">Préparer une évaluation</button></div>

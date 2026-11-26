@@ -302,9 +302,10 @@ function render(){
  <div class="card"><b>Listes à réviser</b><div class="grid" style="margin-top:10px"><label><input type="checkbox" id="vocabAll" ${selectedThemes.length===themes.length?'checked':''}> Toutes les listes</label>${themes.map((t,i)=>`<label><input type="checkbox" class="vocabThemeChoice" value="${t.replace(/"/g,'&quot;')}" ${selectedThemes.includes(t)?'checked':''}> ${t}</label>`).join('')}</div><p class="small muted">${selectedThemes.length} liste(s) sélectionnée(s) · ${entries.length} cartes</p></div>
  <p class="muted">Carte ${word+1} / ${vocabSessionEntries.length} ${window.vocabReviewMode?'· Révision des cartes difficiles':''}</p>
  <div class="lesson"><div class="flash">${w[0]}</div><div id="translation" class="muted" style="text-align:center">Traduction masquée</div></div>
- <div class="controls"><button class="primary" onclick="$('#translation').textContent='Traduction : '+${JSON.stringify(w[1])}">Afficher la réponse</button></div>
+ <div class="controls"><button class="primary" id="showTranslation" type="button">Afficher la traduction</button></div>
  <div class="controls"><button onclick="markVocab(false)">À revoir</button><button class="primary" onclick="markVocab(true)">Je connais</button></div>
  <p class="small muted">Connues : ${vocabSessionState.known.length} · À revoir : ${vocabSessionState.missed.length}</p>`;
+ $('#showTranslation').addEventListener('click',()=>{const target=$('#translation');if(target){target.textContent='Traduction : '+w[1];target.classList.remove('muted');target.style.fontWeight='800';target.style.padding='10px';}});
  $('#vocabAll').addEventListener('change',e=>{window.vocabThemes=e.target.checked?themes.slice():[];window.vocabReviewMode=false;word=0;render()});
  document.querySelectorAll('.vocabThemeChoice').forEach(el=>el.addEventListener('change',()=>{
   window.vocabThemes=[...document.querySelectorAll('.vocabThemeChoice:checked')].map(x=>x.value);

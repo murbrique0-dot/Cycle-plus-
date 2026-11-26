@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10182b">
+  <meta name="description" content="CYCLE+ — apprendre, s'entraîner et progresser au Cycle d'orientation genevois.">
+  <title>CYCLE+ — Réviser autrement</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Accueil CYCLE+"><span class="brand-mark">C+</span><span>CYCLE<span class="brand-plus">+</span><small>TON ESPACE DE RÉVISION</small></span></a>
+      <nav class="side-nav" aria-label="Navigation principale">
+        <button class="nav-link active" data-view="home"><span>⌂</span> Tableau de bord</button>
+        <button class="nav-link" data-view="learn"><span>▤</span> Mes cours</button>
+        <button class="nav-link" data-view="practice"><span>✎</span> Exercices</button>
+        <button class="nav-link" data-view="cards"><span>▧</span> Flashcards</button>
+        <button class="nav-link" data-view="tests"><span>◷</span> Évaluations</button>
+        <button class="nav-link" data-view="grades"><span>▥</span> Moyennes</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="mini-status"><span class="status-dot"></span> Ton espace personnel</div><p>Apprendre · S'entraîner · Progresser</p></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">CYCLE D'ORIENTATION · GENÈVE</p><h1 id="page-title">Tableau de bord</h1></div>
+        <div class="profile-chip"><span class="avatar">É</span><span><b>Mon espace</b><small>Élève</small></span></div>
+      </header>
+
+      <section class="settings-strip">
+        <label>Année<select id="year"><option value="9e">9e</option><option value="10e" selected>10e</option><option value="11e">11e</option></select></label>
+        <label id="group-wrap">Regroupement / section<select id="group"><option>R1</option><option>R2</option><option>R3</option></select></label>
+        <span class="settings-note">Choisis ton niveau pour adapter ton espace.</span>
+      </section>
+
+      <section id="view-home" class="view active">
+        <div class="welcome-panel"><div><p class="eyebrow light">BIENVENUE SUR CYCLE+</p><h2>Chaque révision te fait avancer.</h2><p>Retrouve tes cours, entraîne-toi et suis tes progrès dans un seul espace.</p><button class="btn btn-light" data-go="learn">Découvrir mes cours <span>→</span></button></div><div class="welcome-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="book-emoji">✦</div><span class="floating f1">MATHS</span><span class="floating f2">DE</span><span class="floating f3">EN</span></div></div>
+        <div class="section-heading"><div><p class="eyebrow">TON ESPACE</p><h2>Mes matières</h2></div><span class="muted">Sélectionne une matière pour commencer</span></div>
+        <div class="subject-grid" id="home-subjects"></div>
+        <div class="dashboard-grid"><article class="panel"><div class="panel-head"><div><p class="eyebrow">RÉGULARITÉ</p><h3>Mon activité</h3></div><span class="panel-icon">↗</span></div><div class="activity-number" id="activity-count">0 <small>exercice terminé</small></div><p class="muted">Tes activités sont enregistrées sur cet appareil.</p></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">OBJECTIF</p><h3>Prochaine étape</h3></div><span class="panel-icon">◎</span></div><p class="next-step">Choisis une matière et commence par découvrir un cours.</p><button class="text-btn" data-go="learn">Voir les cours →</button></article></div>
+      </section>
+
+      <section id="view-learn" class="view">
+        <div class="section-heading"><div><p class="eyebrow">COMPRENDRE AVANT DE S'ENTRAÎNER</p><h2>Mes cours</h2><p class="muted">Des explications structurées, des exemples et les notions essentielles.</p></div></div>
+        <div class="toolbar"><label>Matière<select id="learn-subject"></select></label></div>
+        <div id="lesson-list" class="lesson-list"></div>
+        <div id="lesson-detail" class="panel lesson-detail hidden"></div>
+      </section>
+
+      <section id="view-practice" class="view">
+        <div class="section-heading"><div><p class="eyebrow">À TOI DE JOUER</p><h2>Exercices</h2><p class="muted">Choisis le nombre de questions. Tu recevras une correction avec des explications.</p></div></div>
+        <div class="panel config-panel"><label>Matière<select id="practice-subject"></select></label><label>Nombre de questions<select id="question-count"><option>5</option><option>10</option><option>15</option><option>20</option><option>30</option><option>50</option><option>100</option></select></label><button class="btn btn-primary" id="start-practice">Commencer les exercices →</button></div>
+        <div id="practice-area" class="panel work-area hidden"></div>
+      </section>
+
+      <section id="view-cards" class="view">
+        <div class="section-heading"><div><p class="eyebrow">MÉMORISER EN S'AMUSANT</p><h2>Flashcards</h2><p class="muted">Retourne les cartes, indique si tu connais le mot et révise ceux à revoir.</p></div></div>
+        <div class="panel config-panel"><label>Langue<select id="cards-subject"><option value="english">Anglais</option><option value="german">Allemand</option></select></label><button class="btn btn-primary" id="start-cards">Lancer les cartes →</button></div>
+        <div id="cards-area" class="panel work-area hidden"></div>
+      </section>
+
+      <section id="view-tests" class="view">
+        <div class="section-heading"><div><p class="eyebrow">EN CONDITIONS D'ÉVALUATION</p><h2>Évaluations</h2><p class="muted">Une session chronométrée, suivie de ton résultat et de la correction.</p></div></div>
+        <div class="panel config-panel"><label>Matière<select id="test-subject"></select></label><label>Durée<select id="test-duration"><option value="15">15 minutes · Court test</option><option value="20">20 minutes · Test</option><option value="45">45 minutes · Évaluation complète</option></select></label><button class="btn btn-primary" id="start-test">Démarrer l'évaluation →</button></div>
+        <div id="test-area" class="panel work-area hidden"></div>
+      </section>
+
+      <section id="view-grades" class="view">
+        <div class="section-heading"><div><p class="eyebrow">SUIVRE TES RÉSULTATS</p><h2>Calcul de moyenne</h2><p class="muted">Ajoute tes notes et leur pondération pour calculer ta moyenne pondérée.</p></div></div>
+        <div class="panel grade-panel"><div class="grade-fields" id="grade-fields"><div class="grade-row"><label>Nom<input placeholder="Ex. Test de maths"></label><label>Note / 6<input type="number" min="1" max="6" step="0.1" placeholder="5.0"></label><label>Poids (%)<input type="number" min="0" max="100" step="1" placeholder="30"></label><button class="remove-grade" aria-label="Supprimer cette ligne">×</button></div></div><div class="grade-actions"><button class="btn btn-secondary" id="add-grade">+ Ajouter une note</button><button class="btn btn-primary" id="calculate-grade">Calculer ma moyenne</button></div><div id="grade-result" class="grade-result hidden"></div></div>
+      </section>
+      <footer> CYCLE+ <span>·</span> Un outil de révision pour progresser à ton rythme.</footer>
+    </main>
+  </div>
+</body>
+</html>

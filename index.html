@@ -310,4 +310,58 @@ if("serviceWorker" in navigator && location.protocol!=="file:"){
  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(err=>console.warn("Mode hors ligne indisponible :",err)));
 }
 
+
+/* CYCLE+ activities : leçons, mini-tests et maîtrise */
+let cycleMiniState=null;
+let cycleMiniHistory=JSON.parse(localStorage.getItem("cycleplus_minitests")||"[]");
+let cycleMastery=JSON.parse(localStorage.getItem("cycleplus_mastery")||"{}");
+function cycleSaveMini(){localStorage.setItem("cycleplus_minitests",JSON.stringify(cycleMiniHistory));localStorage.setItem("cycleplus_mastery",JSON.stringify(cycleMastery));}
+function cycleMarkDone(i){done[key()+"_"+i]=true;save();cycleOpenLesson(i);}
+function cycleOpenLesson(i){
+ const c=chapters()[i],lang=["de","en","la"].includes($("#subject").value);
+ $("#view").innerHTML='<button onclick="go(\'courses\')">← Retour aux chapitres</button><span class="pill">'+c.level+'</span><h2>'+c.t+'</h2><div class="grid"><div class="card"><h3>📖 Apprendre</h3><p class="muted">Cours, règles et exemples expliqués.</p><button class="primary" onclick="cycleShowLesson('+i+')">Ouvrir la leçon</button></div><div class="card"><h3>✍️ Mini-test</h3><p class="muted">Vérifie tes connaissances et mesure ta maîtrise.</p><button onclick="cycleStartMini('+i+')">Commencer</button></div>'+(lang?'<div class="card"><h3>🗂️ Flashcards</h3><p class="muted">Apprends le vocabulaire de cette langue.</p><button onclick="go(\'vocab\')">Ouvrir</button></div>':'')+'<div class="card"><h3>🏁 Grande évaluation</h3><p class="muted">Évaluation chronométrée de la matière.</p><button onclick="go(\'evaluation\')">Préparer</button></div></div><div class="lesson"><b>Conseil :</b> commence par apprendre, fais le mini-test, puis revois les notions difficiles.</div>';
+}
+function cycleShowLesson(i){
+ const c=chapters()[i];
+ $("#view").innerHTML='<button onclick="cycleOpenLesson('+i+')">← Retour aux activités</button><span class="pill">'+c.level+'</span><h2>'+c.t+'</h2><div class="lesson"><h3>Le cours</h3>'+c.lesson+'</div><h3>Exemple expliqué</h3><div class="lesson">'+c.e+'</div><p class="muted">Essaie de reformuler la notion avec tes propres mots avant de passer aux exercices.</p><button class="primary" onclick="cycleMarkDone('+i+')">✓ Marquer la leçon comme étudiée</button>';
+}
+function cycleMiniSetup(){
+ const lang=$("#subject").value,year=$("#year").value,bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],isLang=["de","en","la"].includes(lang),themes=[...new Set(bank.map(x=>x[2]))],preferred=(year==="10e"&&lang==="de"&&themes.includes("Ferien"))?"Ferien":"Tous";
+ $("#view").innerHTML='<h2>Mini-test · '+subjectLabel()+'</h2><p class="muted">Les mini-tests mesurent ta maîtrise des notions. Ils ne changent pas ta moyenne des grandes évaluations.</p>'+(isLang?'<label>Thème du vocabulaire<br><select id="cycleMiniTheme">'+["Tous",...themes].map(t=>'<option '+(t===preferred?'selected':'')+'>'+t+'</option>').join("")+'</select></label>':'<p class="muted">Questions issues des chapitres disponibles pour ce trimestre.</p>')+'<div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le mini-test</button></div>';
+}
+function cycleStartMini(){
+ const lang=$("#subject").value,year=$("#year").value,isLang=["de","en","la"].includes(lang);let questions=[];
+ if(isLang){
+  const bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],theme=$("#cycleMiniTheme")?$("#cycleMiniTheme").value:((year==="10e"&&lang==="de"&&bank.some(x=>x[2]==="Ferien"))?"Ferien":"Tous");
+  const entries=shuffle(bank.filter(w=>theme==="Tous"||w[2]===theme)).slice(0,10);
+  questions=entries.map(w=>{const distract=shuffle(bank.filter(x=>x[1]!==w[1])).slice(0,3).map(x=>x[1]),opts=shuffle([w[1],...distract]);return {t:w[2],q:'Que signifie « '+w[0]+' » ?',a:opts,c:opts.indexOf(w[1]),e:w[0]+' signifie « '+w[1]+' ».',topic:w[2]};});
+ }else{questions=shuffle(allQuestions()).slice(0,10).map(q=>({...q,topic:q.t}));}
+ if(!questions.length){alert("Aucune question disponible pour cette sélection.");return;}
+ cycleMiniState={questions:questions,answers:{},index:0,finished:false,year:year,path:$("#path").value,subject:lang,term:$("#term").value};
+ cycleRenderMini();
+}
+function cycleRenderMini(){
+ const e=cycleMiniState,v=$("#view");if(!e)return;
+ if(e.finished){
+  const good=e.questions.filter((q,i)=>e.answers[i]===q.c).length,pct=Math.round(good/e.questions.length*100);
+  v.innerHTML='<h2>Résultat du mini-test</h2><div class="card"><div class="flash">'+pct+' %</div><p><b>'+good+'/'+e.questions.length+'</b> bonnes réponses</p><p class="muted">Ce résultat met à jour ta maîtrise des notions. Il ne compte pas dans la moyenne des grandes évaluations.</p></div><h3>Corrections</h3>'+e.questions.map((q,i)=>'<div class="lesson"><b>'+(i+1)+'. '+q.q+'</b><p>Ta réponse : '+(e.answers[i]===undefined?'Sans réponse':q.a[e.answers[i]])+'</p><p>Bonne réponse : <b>'+q.a[q.c]+'</b></p><p class="muted">'+q.e+'</p></div>').join("")+'<button class="primary" onclick="cycleMiniState=null;go(\'mini\')">Nouveau mini-test</button>';return;
+ }
+ const i=e.index,q=e.questions[i];
+ v.innerHTML='<div class="row" style="justify-content:space-between"><span class="pill">Mini-test · Question '+(i+1)+'/'+e.questions.length+'</span><b>'+Math.round(i/e.questions.length*100)+' %</b></div><div class="progress"><i style="width:'+(i/e.questions.length*100)+'%"></i></div><h2>'+q.t+'</h2><div class="question">'+q.q+'</div><div class="answers">'+q.a.map((a,j)=>'<button class="'+(e.answers[i]===j?'primary':'')+'" onclick="cycleChooseMini('+j+')">'+String.fromCharCode(65+j)+'. '+a+'</button>').join("")+'</div><div class="controls"><button '+(i===0?'disabled':'')+' onclick="cycleMiniState.index--;cycleRenderMini()">← Précédente</button><button class="primary" onclick="cycleMiniState.index++;if(cycleMiniState.index>=cycleMiniState.questions.length)cycleFinishMini();else cycleRenderMini()">'+(i===e.questions.length-1?'Terminer':'Suivante →')+'</button></div><p class="small muted">Tu peux revenir aux questions précédentes avant de terminer.</p>';
+}
+function cycleChooseMini(i){cycleMiniState.answers[cycleMiniState.index]=i;cycleRenderMini();}
+function cycleFinishMini(){
+ const e=cycleMiniState;if(!e||e.finished)return;e.finished=true;let good=0;
+ e.questions.forEach((q,i)=>{const ok=e.answers[i]===q.c;if(ok)good++;const k=[e.year,e.path,e.subject,"T"+e.term,q.topic].join("|");if(!cycleMastery[k])cycleMastery[k]={correct:0,total:0,attempts:0};cycleMastery[k].total++;cycleMastery[k].attempts++;if(ok)cycleMastery[k].correct++;});
+ cycleMiniHistory.unshift({date:new Date().toISOString(),year:e.year,path:e.path,subject:subjectLabel(),term:e.term,good:good,count:e.questions.length,score:Number((good/e.questions.length*100).toFixed(1))});cycleMiniHistory=cycleMiniHistory.slice(0,100);cycleSaveMini();cycleRenderMini();
+}
+const cycleOldRender=render;
+render=function(){
+ if(page==="mini"){nav();if(cycleMiniState)cycleRenderMini();else cycleMiniSetup();progress();return;}
+ if(page==="home"){nav();const v=$("#view");v.innerHTML='<span class="pill">Ton espace de travail</span><h2>Bienvenue sur CYCLE+</h2><p class="muted">Sélection : <b>'+$("#year").value+'</b> · parcours <b>'+$("#path").value+'</b> · trimestre <b>'+$("#term").value+'</b> · <b>'+subjectLabel()+'</b>.</p><div class="grid"><div class="card"><h3>📖 Apprendre</h3><p class="muted">Cours et exemples chapitre par chapitre.</p><button class="primary" onclick="go(\'courses\')">Voir les leçons</button></div><div class="card"><h3>✍️ Mini-tests</h3><p class="muted">Petits tests et maîtrise par notion.</p><button onclick="go(\'mini\')">Faire un mini-test</button></div><div class="card"><h3>🗂️ Flashcards</h3><p class="muted">Vocabulaire des langues.</p><button onclick="go(\'vocab\')">Ouvrir les flashcards</button></div><div class="card"><h3>🏁 Grandes évaluations</h3><p class="muted">Tests chronométrés et notes sur 6.</p><button onclick="go(\'evaluation\')">Préparer une évaluation</button></div><div class="card"><h3>📈 Moyennes</h3><p class="muted">Moyenne des grandes évaluations et maîtrise des notions.</p><button onclick="go(\'progress\')">Voir mes résultats</button></div></div>';progress();return;}
+ cycleOldRender();
+};
+openLesson=cycleOpenLesson;
+const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
+
 </script></body></html>

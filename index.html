@@ -219,9 +219,11 @@ function render(){
  if(page==="vocab"){
  let lang=$("#subject").value,y=$("#year").value,bank=(vocabByYear[y]&&vocabByYear[y][lang])||[];
  if(!['de','en','la'].includes(lang)){v.innerHTML='<h2>Vocabulaire & flashcards</h2><p class="muted">Les flashcards sont disponibles pour l’allemand, l’anglais et le latin. Choisis une de ces langues en haut de la page.</p>';return}
- let themes=[...new Set(bank.map(x=>x[2]))],theme=window.vocabTheme||'Tous';
- let entries=bank.map((w,i)=>({w,i})).filter(x=>theme==='Tous'||x.w[2]===theme);
- vocabSessionKey='cycleplus_vocab_'+y+'_'+lang+'_'+theme;
+ let themes=[...new Set(bank.map(x=>x[2]))];
+ let selectedThemes=Array.isArray(window.vocabThemes)?window.vocabThemes:themes.slice();
+ let themeKey=selectedThemes.length===themes.length?'Tous':selectedThemes.join('|');
+ let entries=bank.map((w,i)=>({w,i})).filter(x=>selectedThemes.includes(x.w[2]));
+ vocabSessionKey='cycleplus_vocab_'+y+'_'+lang+'_'+themeKey;
  try{vocabSessionState=JSON.parse(localStorage.getItem(vocabSessionKey)||'{"known":[],"missed":[]}')}catch(e){vocabSessionState={known:[],missed:[]}}
  vocabSessionEntries=window.vocabReviewMode?entries.filter(x=>vocabSessionState.missed.includes(x.i)):entries;
  if(!vocabSessionEntries.length){
@@ -232,14 +234,19 @@ function render(){
  if(word>=vocabSessionEntries.length)word=0;
  let entry=vocabSessionEntries[word],w=entry.w;
  v.innerHTML=`<h2>Vocabulaire & flashcards — ${lang==='de'?'Allemand':lang==='en'?'Anglais':'Latin'} · ${y}</h2>
- <p class="muted">Choisis un thème, retrouve la traduction, puis indique si tu connais le mot. Les cartes difficiles reviendront à la fin.</p>
- <label>Thème<br><select id="vocabTheme">${['Tous',...themes].map(t=>`<option ${t===theme?'selected':''}>${t}</option>`).join('')}</select></label>
+ <p class="muted">Choisis une ou plusieurs listes à réviser. Tu peux mélanger plusieurs thèmes, puis utiliser les flashcards et les exercices de vocabulaire.</p>
+ <div class="card"><b>Listes à réviser</b><div class="grid" style="margin-top:10px"><label><input type="checkbox" id="vocabAll" ${selectedThemes.length===themes.length?'checked':''}> Toutes les listes</label>${themes.map((t,i)=>`<label><input type="checkbox" class="vocabThemeChoice" value="${t.replace(/"/g,'&quot;')}" ${selectedThemes.includes(t)?'checked':''}> ${t}</label>`).join('')}</div><p class="small muted">${selectedThemes.length} liste(s) sélectionnée(s) · ${entries.length} cartes</p></div>
  <p class="muted">Carte ${word+1} / ${vocabSessionEntries.length} ${window.vocabReviewMode?'· Révision des cartes difficiles':''}</p>
  <div class="lesson"><div class="flash">${w[0]}</div><div id="translation" class="muted" style="text-align:center">Traduction masquée</div></div>
  <div class="controls"><button class="primary" onclick="$('#translation').textContent='Traduction : '+${JSON.stringify(w[1])}">Afficher la réponse</button></div>
  <div class="controls"><button onclick="markVocab(false)">À revoir</button><button class="primary" onclick="markVocab(true)">Je connais</button></div>
  <p class="small muted">Connues : ${vocabSessionState.known.length} · À revoir : ${vocabSessionState.missed.length}</p>`;
- $('#vocabTheme').addEventListener('change',e=>{window.vocabTheme=e.target.value;window.vocabReviewMode=false;word=0;render()});
+ $('#vocabAll').addEventListener('change',e=>{window.vocabThemes=e.target.checked?themes.slice():[];window.vocabReviewMode=false;word=0;render()});
+ document.querySelectorAll('.vocabThemeChoice').forEach(el=>el.addEventListener('change',()=>{
+  window.vocabThemes=[...document.querySelectorAll('.vocabThemeChoice:checked')].map(x=>x.value);
+  if(window.vocabThemes.length===themes.length)window.vocabThemes=themes.slice();
+  window.vocabReviewMode=false;word=0;render();
+ }));
 }
  if(page==="progress"){let n=Object.keys(done).length;v.innerHTML=`<h2>Progression et moyennes</h2><p>Chapitres travaillés : <b>${n}</b></p><div class="progress"><i style="width:${Math.min(100,n/18*100)}%"></i></div><h3>Historique des évaluations</h3>${assessmentHistory.length?assessmentHistory.map(a=>`<div class="chapter"><div><b>${a.subject} · ${a.year} ${a.path}</b><div class="muted small">${new Date(a.date).toLocaleString("fr-CH")} · ${a.good}/${a.count} bonnes réponses · ${a.duration} min</div></div><b>${a.note.toFixed(2)}/6</b></div>`).join(""):"<p class=\"muted\">Aucune évaluation terminée pour le moment.</p>"}<h3>Calculer ta moyenne pondérée</h3><p class="muted">Entre chaque note sur 6 et son poids en pourcentage. La somme des poids doit atteindre 100 % pour obtenir une moyenne complète.</p><div class="grid"><div class="card"><label>Nom de l'évaluation<br><input id="gradeName" placeholder="Ex. Test chapitre 2"></label></div><div class="card"><label>Note sur 6<br><input id="gradeScore" type="number" min="1" max="6" step="0.1" placeholder="5.0"></label></div><div class="card"><label>Coefficient (%)<br><input id="gradeWeight" type="number" min="0" max="100" step="1" placeholder="20"></label></div></div><button class="primary" onclick="addGrade()">Ajouter la note</button><div id="gradeList">${gradeHTML()}</div><button onclick="if(confirm('Effacer toutes les notes enregistrées ?')){grades=[];saveGrades();render()}">Effacer les notes</button>`}
  progress();

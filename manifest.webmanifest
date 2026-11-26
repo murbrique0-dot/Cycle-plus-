@@ -1,0 +1,24 @@
+{
+  "id": "./",
+  "name": "CYCLE+ — Révisions scolaires",
+  "short_name": "CYCLE+",
+  "description": "Cours, exercices, flashcards et évaluations pour le Cycle d’orientation.",
+  "lang": "fr-CH",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1020",
+  "theme_color": "#10182d",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

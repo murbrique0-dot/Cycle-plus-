@@ -413,6 +413,7 @@ function cycleStartMini(){
   const bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],theme=$("#cycleMiniTheme")?$("#cycleMiniTheme").value:((year==="10e"&&lang==="de"&&bank.some(x=>x[2]==="Ferien"))?"Ferien":"Tous");
   const selected=Array.isArray(window.cycleVocabThemes)&&window.cycleVocabThemes.length?window.cycleVocabThemes:null,count=Number($("#cycleMiniCount")?.value||10),entries=shuffle(bank.filter(w=>selected?selected.includes(w[2]):(theme==="Tous"||w[2]===theme))).slice(0,count);
   questions=entries.map(w=>{const distract=shuffle(bank.filter(x=>x[1]!==w[1])).slice(0,3).map(x=>x[1]),opts=shuffle([w[1],...distract]);return {t:w[2],q:'Que signifie « '+w[0]+' » ?',a:opts,c:opts.indexOf(w[1]),e:w[0]+' signifie « '+w[1]+' ».',topic:w[0]};});
+  if(questions.length<count){const grammar=shuffle(allQuestions().filter(q=>q.q&&!questions.some(x=>x.q===q.q))).slice(0,count-questions.length);questions.push(...grammar);}
  }else{const count=Number($("#cycleMiniCount")?.value||10);questions=shuffle(allQuestions()).slice(0,count).map(q=>({...q,topic:q.t}));}
  if(!questions.length){alert("Aucune question disponible pour cette sélection.");return;}
  cycleMiniState={questions:questions,answers:{},index:0,finished:false,year:year,path:$("#path").value,subject:lang,term:$("#term").value};

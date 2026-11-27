@@ -38,7 +38,7 @@ button{cursor:pointer;font-weight:700}button.primary{background:var(--blue);colo
 <label>Année<select id="year"><option>9e</option><option selected>10e</option><option>11e</option></select></label>
 <label>Parcours<select id="path"><option value="CT">CT</option><option value="LC">LC</option><option value="LS" selected>LS</option></select></label>
 <label>Trimestre<select id="term"><option value="1">Trimestre 1</option><option value="2">Trimestre 2</option><option value="3">Trimestre 3</option></select></label>
-<label>Matière<select id="subject"><option value="maths">Mathématiques</option><option value="fr">Français</option><option value="en">Anglais</option><option value="de">Allemand</option><option value="la">Latin (vocabulaire)</option><option value="physics">Physique</option><option value="biology">Biologie</option><option value="histoire">Histoire</option><option value="geo">Géographie</option><option value="info">Informatique</option></select></label>
+<label>Matière<select id="subject"><option value="maths">Mathématiques</option><option value="fr">Français</option><option value="en">Anglais</option><option value="de">Allemand</option><option value="la">Latin (profil L)</option><option value="physics">Physique (profil sciences)</option><option value="dms">Démarches mathématiques et scientifiques (profil sciences)</option><option value="arts">Arts visuels</option><option value="music">Musique</option><option value="pe">Éducation physique</option><option value="biology">Biologie</option><option value="histoire">Histoire</option><option value="geo">Géographie</option><option value="info">Informatique (complément)</option></select></label>
 <button id="applySelection" class="primary" type="button">Valider ma sélection</button>
 </div>
 <div class="layout"><aside class="sidebar">
@@ -447,7 +447,7 @@ function practiceAnswer(i){if(practiceValidated[qi])return;practiceAnswers[qi]=i
 function validatePractice(){if(practiceAnswers[qi]===undefined)return;practiceValidated[qi]=true;let c=allQuestions()[qi%allQuestions().length];$("#feedback").innerHTML=feedbackHTML(c,practiceAnswers[qi]);render()}
 function go(p){page=p;render()}
 function openLesson(i){let c=chapters()[i],k=key()+"_"+i;$("#view").innerHTML=`<button onclick="go('courses')">← Retour aux chapitres</button><span class="pill">${c.level}</span><h2>${c.t}</h2><div class="lesson"><h3>Le cours</h3>${c.lesson}</div><h3>Exemple expliqué</h3><div class="lesson">${c.e}</div><p class="muted">Essaie de reformuler la notion avec tes propres mots avant de passer aux exercices.</p><button class="primary" onclick="done['${k}']=true;save();cycleStartLessonTest(${i})">J'ai appris ce cours → S'entraîner</button>`}
-function startEvaluation(){let pool=allQuestions();if(!pool.length){alert("Aucune question disponible pour cette matière et ce trimestre.");return}clearInterval(timerId);let mins=Number($("#evalDuration").value),target=mins===15?30:mins===20?40:60,questions=shuffle(pool).slice(0,target).map(q=>({...q}));evalState={questions,answers:{},index:0,seconds:mins*60,startedAt:Date.now(),duration:mins,finished:false,saved:false,uniqueCount:questions.length,availableCount:pool.length};renderEvaluation();timerId=setInterval(()=>{if(!evalState||evalState.finished)return;evalState.seconds--;let el=$("#timer");if(el)el.textContent=formatTime(evalState.seconds);if(evalState.seconds<=0)finishEvaluation()},1000)}
+function startEvaluation(){let pool=allQuestions();if(!pool.length){alert("Aucune question disponible pour cette matière et ce trimestre.");return}clearInterval(timerId);let mins=Number($("#evalDuration").value),target=mins===15?30:mins===20?40:60,questions=shuffle([...new Map(pool.map(q=>[q.q,q])).values()]).slice(0,target).map(cycleShuffleQuestion);evalState={questions,answers:{},index:0,seconds:mins*60,startedAt:Date.now(),duration:mins,finished:false,saved:false,uniqueCount:questions.length,availableCount:pool.length};renderEvaluation();timerId=setInterval(()=>{if(!evalState||evalState.finished)return;evalState.seconds--;let el=$("#timer");if(el)el.textContent=formatTime(evalState.seconds);if(evalState.seconds<=0)finishEvaluation()},1000)}
 function formatTime(s){return Math.floor(Math.max(0,s)/60)+":"+String(Math.max(0,s)%60).padStart(2,"0")}
 function renderEvaluation(){let v=$("#view");if(!evalState)return;let e=evalState;if(e.finished){let good=e.questions.filter((q,i)=>e.answers[i]===q.c).length;let note=good/e.questions.length*6;v.innerHTML=`<h2>Résultat de l'évaluation</h2><div class="card"><h3>${good} / ${e.questions.length} bonnes réponses</h3><div class="flash">${note.toFixed(2)} / 6</div><p class="muted">Résultat indicatif calculé sur les réponses correctes. Les ${e.uniqueCount} questions de cette évaluation étaient toutes différentes.</p><p class="small muted">Ton résultat a été ajouté à l’historique de cet appareil.</p></div><h3>Corrections détaillées</h3>`+e.questions.map((q,i)=>`<div class="lesson"><b>${i+1}. ${q.q}</b><p>Ta réponse : ${e.answers[i]===undefined?"Sans réponse":q.a[e.answers[i]]}</p><p>Bonne réponse : <b>${q.a[q.c]}</b></p><p class="muted">${q.e}</p></div>`).join("")+`<button class="primary" onclick="evalState=null;go('evaluation')">Nouvelle évaluation</button>`;return}
 let i=e.index,q=e.questions[i];v.innerHTML=`<div class="row" style="justify-content:space-between"><span class="pill">Évaluation · Question ${i+1}/${e.questions.length}</span><b id="timer">${formatTime(e.seconds)}</b></div><div class="progress"><i style="width:${(i/e.questions.length)*100}%"></i></div><h2>${q.t}</h2><div class="question">${q.q}</div><div class="answers">${q.a.map((a,j)=>`<button class="${e.answers[i]===j?"primary":""}" onclick="chooseEval(${j})">${String.fromCharCode(65+j)}. ${a}</button>`).join("")}</div><div class="controls"><button ${i===0?"disabled":""} onclick="evalState.index--;renderEvaluation()">← Précédente</button><button onclick="evalState.index++;if(evalState.index>=evalState.questions.length)finishEvaluation();else renderEvaluation()">${i===e.questions.length-1?"Terminer":"Suivante →"}</button></div><p class="small muted">Tu peux revenir aux questions précédentes avant de terminer.</p>`}
@@ -689,6 +689,139 @@ info:[
 ]
 };
 
+
+/* Compléments 10e LS : disciplines communes et profil sciences.
+   Les contenus de profil restent signalés comme tels ; les séquences exactes dépendent des cours. */
+const cycleAddedLessons10={
+ dms:[
+  {trimestre:1,t:"Démarche scientifique et modélisation",level:"DMS · profil sciences",lesson:"Une démarche scientifique part d'une question, formule une hypothèse, définit une méthode, recueille des données puis interprète les résultats. Un modèle simplifie une situation réelle pour mieux la comprendre.",q:"Dans une expérience, à quoi sert une hypothèse ?",a:["À proposer une explication que l'on va tester","À remplacer les mesures","À garantir le résultat"],c:0,e:"Une hypothèse est une proposition testable, pas une certitude."},
+  {trimestre:2,t:"Tableaux, graphiques et variables",level:"DMS · profil sciences",lesson:"Dans un tableau, nomme les grandeurs et indique leurs unités. Sur un graphique, place la variable indépendante sur l'axe horizontal et la variable dépendante sur l'axe vertical. Une corrélation ne prouve pas toujours une causalité.",q:"Sur un graphique classique, où place-t-on la variable indépendante ?",a:["Sur l'axe horizontal (x)","Sur l'axe vertical (y)","Dans le titre uniquement"],c:0,e:"La variable indépendante est généralement placée sur l'axe horizontal."},
+  {trimestre:3,t:"Résolution de problèmes et estimation",level:"DMS · profil sciences",lesson:"Pour résoudre un problème, identifie les données, la question, les relations utiles et les unités. Estime d'abord un ordre de grandeur, calcule ensuite et vérifie si le résultat est cohérent.",q:"Pourquoi faire une estimation avant un calcul ?",a:["Pour vérifier ensuite que le résultat est plausible","Pour éviter d'indiquer les unités","Pour remplacer le raisonnement"],c:0,e:"L'estimation aide à repérer une erreur de calcul ou d'unité."}
+ ],
+ arts:[
+  {trimestre:1,t:"Lire et décrire une image",level:"Arts visuels",lesson:"Pour analyser une image, décris ce qui est visible avant de l'interpréter : sujet, cadrage, composition, lignes, couleurs, lumière, matières et techniques. Justifie ton interprétation avec des éléments observables.",q:"Quelle démarche est la plus pertinente pour commencer une analyse d'image ?",a:["Décrire les éléments visibles avant de les interpréter","Donner immédiatement son avis sans argument","Inventer l'intention de l'artiste"],c:0,e:"On distingue d'abord l'observation de l'interprétation personnelle."},
+  {trimestre:2,t:"Composition et cadrage",level:"Arts visuels",lesson:"La composition organise les éléments dans l'espace. Le cadrage détermine ce qui entre dans l'image. Les lignes, les masses, les contrastes et les points de focalisation guident le regard.",q:"Quel est le rôle du cadrage ?",a:["Déterminer la partie de la scène montrée","Changer la matière du support","Donner automatiquement une perspective"],c:0,e:"Le cadrage sélectionne la portion de scène visible."},
+  {trimestre:3,t:"Couleurs, contrastes et matières",level:"Arts visuels",lesson:"Les contrastes peuvent opposer clair et sombre, couleurs complémentaires, chaud et froid, ou textures. Le choix des matériaux et des techniques participe au sens de la création.",q:"Quel contraste oppose directement une zone claire à une zone sombre ?",a:["Le contraste clair-obscur","Le contraste de taille uniquement","Le contraste de mouvement"],c:0,e:"Le clair-obscur repose sur l'opposition entre lumière et ombre."}
+ ],
+ music:[
+  {trimestre:1,t:"Rythme, pulsation et mesure",level:"Musique",lesson:"La pulsation est un battement régulier. Le rythme organise les durées des sons et des silences. La mesure regroupe les pulsations selon une organisation récurrente, indiquée par la signature rythmique.",q:"Qu'est-ce que la pulsation ?",a:["Un battement régulier qui sert de repère","La hauteur d'une note","Le volume maximal d'un son"],c:0,e:"La pulsation est le battement régulier que l'on peut suivre en frappant dans les mains."},
+  {trimestre:2,t:"Tempo, nuances et expression",level:"Musique",lesson:"Le tempo indique la vitesse de la pulsation. Les nuances indiquent l'intensité sonore : piano (doux), forte (fort). Accélérer, ralentir et varier les nuances modifie l'expression musicale.",q:"Que signifie « forte » dans une partition ?",a:["Jouer fort","Jouer lentement","Jouer très aigu"],c:0,e:"Forte indique une intensité sonore forte."},
+  {trimestre:3,t:"Timbre et familles d'instruments",level:"Musique",lesson:"Le timbre est la couleur sonore qui permet de distinguer des instruments même lorsqu'ils jouent la même note. On peut classer les instruments en familles : cordes, vents et percussions, entre autres.",q:"Qu'appelle-t-on le timbre d'un instrument ?",a:["Sa couleur sonore caractéristique","La vitesse du morceau","Le nombre de mesures"],c:0,e:"Le timbre caractérise la qualité du son propre à une voix ou un instrument."}
+ ],
+ pe:[
+  {trimestre:1,t:"Échauffement et sécurité",level:"Éducation physique",lesson:"Un échauffement progressif prépare le corps à l'effort : mobilisation articulaire, activation musculaire et gestes adaptés à l'activité. Respecte les consignes, l'espace et les capacités de chacun.",q:"Pourquoi effectuer un échauffement progressif ?",a:["Pour préparer le corps à l'effort","Pour remplacer toute récupération","Pour augmenter immédiatement la difficulté au maximum"],c:0,e:"L'échauffement prépare progressivement l'organisme à l'activité."},
+  {trimestre:2,t:"Effort, récupération et sensations",level:"Éducation physique",lesson:"L'effort sollicite les muscles et les systèmes respiratoire et cardiovasculaire. La récupération permet au corps de revenir progressivement à un état de repos. Adapte l'intensité à l'activité et aux consignes de l'enseignant.",q:"Quel est l'objectif principal de la récupération après un effort ?",a:["Permettre au corps de revenir progressivement au repos","Maintenir l'effort maximal sans pause","Remplacer l'hydratation"],c:0,e:"La récupération accompagne le retour progressif au calme."},
+  {trimestre:3,t:"Coopération et règles du jeu",level:"Éducation physique",lesson:"Dans les activités collectives, la réussite dépend aussi de la communication, de l'observation, du respect des règles et de la coopération. Les stratégies doivent s'adapter à la situation de jeu.",q:"Quelle attitude favorise le mieux la coopération dans un jeu collectif ?",a:["Communiquer et respecter les rôles de chacun","Garder toujours le ballon pour soi","Ignorer les règles communes"],c:0,e:"La coopération repose sur la communication et le respect des règles et des partenaires."}
+ ]
+};
+Object.entries(cycleAddedLessons10).forEach(([subject,lessons])=>{
+ if(!curriculum["10e"][subject]) curriculum["10e"][subject]=[];
+ curriculum["10e"][subject].push(...lessons);
+});
+const cycleAddedQuestions10={
+ maths:[
+  {trimestre:1,t:"Fractions et calculs",q:"Calcule : 7/12 + 1/4.",a:["5/6","8/16","2/3","3/4"],c:0,e:"1/4 = 3/12 ; 7/12 + 3/12 = 10/12 = 5/6."},
+  {trimestre:1,t:"Proportionnalité et pourcentages",q:"Un prix de 120 CHF augmente de 10 %. Quel est le nouveau prix ?",a:["132 CHF","130 CHF","110 CHF","12 CHF"],c:0,e:"10 % de 120 = 12 ; 120 + 12 = 132 CHF."},
+  {trimestre:2,t:"Fonctions et graphiques",q:"Si f(x) = −2x + 7, quelle est l'image de 3 ?",a:["1","13","−1","4"],c:0,e:"f(3) = −2 × 3 + 7 = 1."},
+  {trimestre:2,t:"Théorème de Thalès",q:"Deux longueurs correspondantes sont dans le rapport 3/5. Si la petite mesure 9 cm, la grande mesure…",a:["15 cm","12 cm","18 cm","6 cm"],c:0,e:"Le coefficient est 5/3 ; 9 × 5/3 = 15 cm."},
+  {trimestre:3,t:"Statistiques",q:"La moyenne de 5, 7, 8 et x est 7. Quelle est la valeur de x ?",a:["8","7","6","9"],c:0,e:"La somme doit valoir 4 × 7 = 28 ; x = 28 − 20 = 8."},
+  {trimestre:3,t:"Probabilités",q:"On lance deux fois une pièce équilibrée. Quelle est la probabilité d'obtenir deux fois pile ?",a:["1/4","1/2","1/3","1/8"],c:0,e:"Les quatre issues équiprobables sont PP, PF, FP et FF ; une seule donne deux piles."}
+ ],
+ fr:[
+  {trimestre:1,t:"Phrase complexe et subordination",q:"Dans « Quand la cloche sonne, les élèves sortent », quelle est la subordonnée ?",a:["Quand la cloche sonne","Les élèves sortent","La cloche"],c:0,e:"La proposition introduite par « quand » est subordonnée circonstancielle de temps."},
+  {trimestre:1,t:"Fonctions dans la phrase",q:"Dans « Le professeur parle aux élèves », « aux élèves » est…",a:["COI","COD","Sujet"],c:0,e:"On parle à qui ? « aux élèves » est un complément d'objet indirect."},
+  {trimestre:2,t:"Conjugaison",q:"Quel est le futur simple de « nous prendre » ?",a:["nous prendrons","nous prendrions","nous prenions"],c:0,e:"Le futur simple de prendre à la première personne du pluriel est « nous prendrons »."},
+  {trimestre:2,t:"Accord du participe passé",q:"Choisis la phrase correcte.",a:["Les photos que tu as prises sont belles.","Les photos que tu as pris sont belles.","Les photos que tu as prise sont belles."],c:0,e:"Le COD « que » reprend « les photos » et précède le participe : féminin pluriel."},
+  {trimestre:3,t:"Argumentation",q:"Quel élément rend un argument plus convaincant ?",a:["Un exemple précis qui l'illustre","Une répétition sans explication","Une affirmation sans justification"],c:0,e:"Un exemple concret permet d'appuyer et d'expliquer l'argument."},
+  {trimestre:3,t:"Vocabulaire et figures de style",q:"« Cette valise pèse une tonne » est une…",a:["Hyperbole","Comparaison","Personnification"],c:0,e:"L'hyperbole exagère volontairement une réalité."}
+ ],
+ en:[
+  {trimestre:1,t:"Present simple and continuous",q:"Choose: “Look! The children ___ in the garden.”",a:["are playing","play usually","plays","is playing"],c:0,e:"“Look!” signals an action happening now: are + verb-ing."},
+  {trimestre:1,t:"Question forms",q:"Choose the correct question.",a:["How often do you practise?","How often you practise?","How often does you practise?","How often are you practise?"],c:0,e:"Au présent simple, on utilise do avec you dans une question."},
+  {trimestre:2,t:"Past simple and irregular verbs",q:"Complete: “Last weekend, she ___ a new book.”",a:["bought","buy","buyed","buys"],c:0,e:"Buy est irrégulier : son prétérit est bought."},
+  {trimestre:2,t:"Comparatives and superlatives",q:"Complete: “This is the ___ film I have ever seen.”",a:["most exciting","more exciting","excitingest","exciting"],c:0,e:"Pour un adjectif long, le superlatif se forme avec the most."},
+  {trimestre:3,t:"First conditional",q:"Complete: “If we hurry, we ___ the bus.”",a:["will catch","would caught","catching","caught"],c:0,e:"First conditional : if + présent, puis will + base verbale."},
+  {trimestre:3,t:"Reading comprehension",q:"In a text, what does “however” usually express?",a:["A contrast","A reason","A result","A time"],c:0,e:"However introduit généralement une opposition ou un contraste."}
+ ],
+ de:[
+  {trimestre:1,t:"Conjugaison au présent",q:"Complète : « Ihr ___ heute Fußball. » (spielen)",a:["spielt","spielen","spielst","spiele"],c:0,e:"Avec ihr, spielen prend la terminaison -t : ihr spielt."},
+  {trimestre:1,t:"Articles et pluriels",q:"Quel est le pluriel de « das Kind » ?",a:["die Kinder","die Kinds","der Kinder","das Kinder"],c:0,e:"Le pluriel de das Kind est die Kinder."},
+  {trimestre:2,t:"Perfekt",q:"Complète : « Sie ___ nach Hause gegangen. »",a:["ist","hat","sind","haben"],c:0,e:"Pour gehen, on utilise sein ; avec sie au singulier : sie ist gegangen."},
+  {trimestre:2,t:"Subordonnées avec weil",q:"Complète : « Ich lerne Deutsch, weil ich in der Schweiz ___ . »",a:["wohne","wohnen","wohnst","gewohnt"],c:0,e:"Dans cette subordonnée, le verbe conjugué est à la fin : ich wohne."},
+  {trimestre:3,t:"Pronoms et accusatif",q:"Complète : « Ich sehe ___ Mann. »",a:["den","dem","der","des"],c:0,e:"Mann est masculin et complément direct : l'article à l'accusatif est den."},
+  {trimestre:3,t:"Vocabulaire et phrases",q:"Que signifie « obwohl » ?",a:["bien que","parce que","ensuite","avant"],c:0,e:"Obwohl signifie « bien que » et introduit une subordonnée."}
+ ],
+ physics:[
+  {trimestre:1,t:"Grandeurs et unités",q:"Une distance de 2,5 km correspond à…",a:["2 500 m","250 m","25 000 m","0,25 m"],c:0,e:"1 km = 1 000 m ; 2,5 × 1 000 = 2 500 m."},
+  {trimestre:1,t:"Vitesse et mouvement",q:"Un véhicule parcourt 150 km en 2 h. Sa vitesse moyenne est…",a:["75 km/h","300 km/h","60 km/h","50 km/h"],c:0,e:"v = d/t = 150/2 = 75 km/h."},
+  {trimestre:2,t:"Électricité et circuits",q:"Quel appareil se branche en dérivation aux bornes d'un dipôle pour mesurer la tension ?",a:["Un voltmètre","Un ampèremètre","Un dynamomètre","Un thermomètre"],c:0,e:"Le voltmètre mesure la tension et se branche en dérivation."},
+  {trimestre:2,t:"Électricité et circuits",q:"Quelle unité utilise-t-on pour l'intensité du courant électrique ?",a:["L'ampère (A)","Le volt (V)","Le watt (W)","Le joule (J)"],c:0,e:"L'intensité du courant se mesure en ampères."},
+  {trimestre:3,t:"Énergie et puissance",q:"Un appareil de 60 W fonctionne pendant 3 h. Quelle énergie utilise-t-il ?",a:["180 Wh","20 Wh","63 Wh","180 W"],c:0,e:"E = P × t = 60 × 3 = 180 Wh."},
+  {trimestre:3,t:"Énergie et puissance",q:"Quelle transformation réalise principalement une lampe allumée ?",a:["Énergie électrique en énergie lumineuse et thermique","Énergie thermique en énergie nucléaire","Énergie chimique en énergie sonore uniquement"],c:0,e:"Une lampe convertit l'énergie électrique en lumière et en chaleur."}
+ ],
+ biology:[
+  {trimestre:1,t:"Cellules et organisation du vivant",q:"Quelle structure délimite une cellule et contrôle les échanges avec son milieu ?",a:["La membrane plasmique","Le noyau","Le chromosome","Le chloroplaste"],c:0,e:"La membrane plasmique délimite la cellule et participe au contrôle des échanges."},
+  {trimestre:1,t:"Organes et systèmes",q:"Quel système transporte le sang dans l'organisme ?",a:["Le système circulatoire","Le système digestif","Le système nerveux","Le système squelettique"],c:0,e:"Le cœur et les vaisseaux constituent le système circulatoire."},
+  {trimestre:2,t:"Respiration et échanges gazeux",q:"Dans les poumons, où ont lieu les principaux échanges gazeux ?",a:["Dans les alvéoles pulmonaires","Dans l'estomac","Dans les bronches uniquement","Dans la trachée"],c:0,e:"Les échanges entre l'air et le sang se font au niveau des alvéoles."},
+  {trimestre:2,t:"Photosynthèse",q:"Quel gaz est libéré lors de la photosynthèse ?",a:["Le dioxygène","Le dioxyde de carbone","L'azote","L'hydrogène"],c:0,e:"La photosynthèse libère du dioxygène."},
+  {trimestre:3,t:"Écosystèmes et chaînes alimentaires",q:"Dans une chaîne alimentaire, quel rôle joue une plante verte ?",a:["Producteur","Consommateur secondaire","Décomposeur uniquement","Prédateur"],c:0,e:"La plante produit de la matière organique grâce à la photosynthèse."},
+  {trimestre:3,t:"Écosystèmes et chaînes alimentaires",q:"Que représente une flèche dans une chaîne alimentaire ?",a:["Le transfert de matière et d'énergie vers le consommateur","Le déplacement physique obligatoire de l'animal","La taille des organismes","Le temps de vie"],c:0,e:"La flèche va de l'organisme consommé vers celui qui le consomme."}
+ ],
+ histoire:[
+  {trimestre:1,t:"Renaissance et humanisme",q:"Quel rôle l'imprimerie joue-t-elle dans la diffusion des idées à la Renaissance ?",a:["Elle facilite la reproduction et la circulation des textes","Elle empêche la diffusion des livres","Elle remplace toutes les écoles","Elle supprime les langues écrites"],c:0,e:"L'imprimerie permet de produire davantage d'exemplaires et de diffuser les idées plus largement."},
+  {trimestre:1,t:"Analyser une source historique",q:"Un témoignage rédigé plusieurs décennies après un événement est une source…",a:["Postérieure à l'événement","Forcément contemporaine","Sans auteur","Toujours neutre"],c:0,e:"La date de rédaction permet de situer la source par rapport à l'événement."},
+  {trimestre:2,t:"Révolutions politiques",q:"Quel principe est affirmé dans la Déclaration des droits de l'homme et du citoyen de 1789 ?",a:["L'égalité en droits","Le pouvoir absolu héréditaire","La suppression de toute loi","Le retour au système féodal"],c:0,e:"La Déclaration affirme notamment la liberté et l'égalité en droits."},
+  {trimestre:2,t:"Révolutions politiques",q:"Pourquoi la séparation des pouvoirs est-elle importante ?",a:["Pour éviter la concentration de tous les pouvoirs","Pour donner tous les pouvoirs à une seule personne","Pour supprimer les institutions","Pour empêcher toute loi"],c:0,e:"La séparation des pouvoirs limite les abus en répartissant les fonctions politiques."},
+  {trimestre:3,t:"Révolution industrielle",q:"Quelle conséquence accompagne l'industrialisation au XIXe siècle ?",a:["L'urbanisation et le développement des villes industrielles","La disparition de toutes les usines","La fin des transports","Le retour général à l'agriculture de subsistance"],c:0,e:"Le développement des usines attire des populations vers les villes."},
+  {trimestre:3,t:"Révolution industrielle",q:"Quel moyen de transport joue un rôle important dans l'industrialisation du XIXe siècle ?",a:["Le chemin de fer","Le satellite","L'avion à réaction","Le métro automatique"],c:0,e:"Le chemin de fer facilite le transport des matières premières, des marchandises et des personnes."}
+ ],
+ geo:[
+  {trimestre:1,t:"Population et densité",q:"Une ville compte 90 000 habitants sur 300 km². Quelle est sa densité ?",a:["300 habitants/km²","30 habitants/km²","900 habitants/km²","270 habitants/km²"],c:0,e:"90 000 ÷ 300 = 300 habitants par km²."},
+  {trimestre:1,t:"Lire une carte",q:"Sur une carte à l'échelle 1:100 000, 1 cm représente…",a:["1 km","100 km","100 m","10 km"],c:0,e:"1 cm sur la carte représente 100 000 cm sur le terrain, soit 1 km."},
+  {trimestre:2,t:"Ressources et développement durable",q:"Quelle ressource est renouvelable à l'échelle humaine si elle est gérée durablement ?",a:["Le bois d'une forêt replantée et gérée","Le pétrole","Le charbon","Le gaz naturel"],c:0,e:"Une forêt peut se renouveler si les prélèvements restent compatibles avec sa régénération."},
+  {trimestre:2,t:"Risques et aménagement",q:"Quelle mesure peut réduire les dégâts liés aux inondations ?",a:["Éviter de construire dans les zones les plus exposées","Supprimer les cartes de risques","Construire uniquement au bord des cours d'eau","Bétonner toutes les surfaces"],c:0,e:"L'aménagement du territoire doit tenir compte de l'exposition aux risques."},
+  {trimestre:3,t:"Mondialisation et échanges",q:"Que signifie « interdépendance » entre pays ?",a:["Le fait que leurs économies et sociétés dépendent en partie les unes des autres","Le fait qu'ils n'échangent jamais","Le fait qu'ils ont tous le même climat","Le fait qu'ils n'ont aucune relation"],c:0,e:"Les échanges créent des dépendances mutuelles entre territoires."},
+  {trimestre:3,t:"Paysages et territoires",q:"Quel élément permet d'identifier une région urbaine sur une photographie aérienne ?",a:["Une forte concentration de bâtiments et de voies de transport","Une absence totale de constructions","Uniquement des glaciers","Un seul champ isolé"],c:0,e:"Les zones urbaines présentent généralement une forte densité de constructions et d'infrastructures."}
+ ],
+ info:[
+  {trimestre:1,t:"Fichiers et extensions",q:"Quel format est généralement adapté à un document texte que l'on veut partager en conservant sa mise en page ?",a:["PDF","MP3","PNG","ZIP uniquement"],c:0,e:"Le PDF conserve généralement la mise en page sur différents appareils."},
+  {trimestre:1,t:"Organisation des données",q:"Quel nom de fichier est le plus clair pour retrouver un devoir ?",a:["Histoire_10e_revision_2026-11-27.pdf","documentfinalvraivrai2","aaaa","nouveau"],c:0,e:"Un nom descriptif avec matière, sujet et date facilite le classement."},
+  {trimestre:2,t:"Web et HTML",q:"À quoi sert l'attribut alt d'une image HTML ?",a:["À fournir un texte alternatif décrivant l'image","À changer la couleur de la page","À créer un mot de passe","À lancer une vidéo"],c:0,e:"Le texte alternatif améliore l'accessibilité et décrit l'image si elle ne s'affiche pas."},
+  {trimestre:2,t:"Algorithmes et programmation",q:"Que produit une boucle qui répète une instruction cinq fois ?",a:["Cinq exécutions de cette instruction","Une exécution seulement","Une erreur dans tous les cas","Une suppression du programme"],c:0,e:"Une boucle répète les instructions selon le nombre ou la condition définie."},
+  {trimestre:3,t:"Sécurité numérique",q:"Pourquoi faut-il installer les mises à jour de sécurité ?",a:["Elles corrigent notamment des vulnérabilités connues","Elles rendent tous les mots de passe publics","Elles suppriment toujours les fichiers","Elles désactivent Internet"],c:0,e:"Les mises à jour corrigent des failles et améliorent la protection."},
+  {trimestre:3,t:"Sécurité numérique",q:"Que faire face à un message inattendu qui demande ton mot de passe ?",a:["Ne pas cliquer et vérifier par un canal officiel","Répondre avec le mot de passe","Transférer le message à tous ses contacts","Désactiver les protections"],c:0,e:"Une demande inattendue de mot de passe peut être une tentative d'hameçonnage."}
+ ],
+ dms:[
+  {trimestre:1,t:"Démarche scientifique et modélisation",q:"Dans une expérience, quelle variable doit-on modifier volontairement ?",a:["La variable indépendante","La variable dépendante","Toutes les variables à la fois"],c:0,e:"On modifie la variable indépendante et on observe l'effet sur la variable dépendante."},
+  {trimestre:2,t:"Tableaux, graphiques et variables",q:"Une mesure est de 250 cm. Quelle est sa valeur en mètres ?",a:["2,5 m","25 m","0,25 m","2500 m"],c:0,e:"250 cm ÷ 100 = 2,5 m."},
+  {trimestre:3,t:"Résolution de problèmes et estimation",q:"Un calcul donne une distance de 8 000 km pour traverser une petite salle. Que faut-il faire ?",a:["Vérifier les données et les unités : le résultat est invraisemblable","Accepter le résultat sans contrôle","Supprimer l'unité"],c:0,e:"Un ordre de grandeur permet de repérer un résultat incohérent."}
+ ],
+ arts:[
+  {trimestre:1,t:"Lire et décrire une image",q:"Dans une analyse d'image, qu'est-ce que le cadrage ?",a:["Le choix de la partie de la scène montrée","La signature de l'artiste","Le prix de l'œuvre"],c:0,e:"Le cadrage détermine ce qui apparaît dans l'image."},
+  {trimestre:2,t:"Composition et cadrage",q:"Quel élément guide souvent le regard dans une composition ?",a:["Les lignes directrices et les contrastes","Le numéro de la salle","La date du calendrier"],c:0,e:"Les lignes et les contrastes orientent l'attention du spectateur."},
+  {trimestre:3,t:"Couleurs, contrastes et matières",q:"Quelles couleurs sont complémentaires dans le modèle traditionnel ?",a:["Rouge et vert","Rouge et orange","Bleu et vert"],c:0,e:"Dans le modèle traditionnel des couleurs, le rouge et le vert sont complémentaires."}
+ ],
+ music:[
+  {trimestre:1,t:"Rythme, pulsation et mesure",q:"Une mesure à 3/4 contient combien de temps de noire ?",a:["3","2","4","6"],c:0,e:"La signature 3/4 indique trois temps par mesure, avec la noire comme unité de temps."},
+  {trimestre:2,t:"Tempo, nuances et expression",q:"Quel terme indique un ralentissement progressif ?",a:["Ritardando","Accelerando","Forte"],c:0,e:"Ritardando indique que le tempo ralentit progressivement."},
+  {trimestre:3,t:"Timbre et familles d'instruments",q:"Lequel est un instrument à vent ?",a:["La clarinette","Le violon","Le tambour"],c:0,e:"La clarinette est un instrument à vent de la famille des bois."}
+ ],
+ pe:[
+  {trimestre:1,t:"Échauffement et sécurité",q:"Quel comportement est le plus sûr pendant une activité sportive ?",a:["Respecter les consignes et l'espace de pratique","Traverser un terrain pendant un exercice","Ignorer les signaux de l'enseignant"],c:0,e:"Les consignes et l'organisation de l'espace contribuent à la sécurité."},
+  {trimestre:2,t:"Effort, récupération et sensations",q:"Quel indicateur peut aider à apprécier l'intensité d'un effort ?",a:["La respiration et la capacité à parler","La couleur des chaussures","Le nombre de spectateurs"],c:0,e:"La respiration et les sensations donnent des indications sur l'intensité de l'effort."},
+  {trimestre:3,t:"Coopération et règles du jeu",q:"Que faut-il faire si un désaccord survient sur une règle ?",a:["Échanger calmement et appliquer la règle convenue","Insulter l'autre équipe","Arrêter de respecter toutes les règles"],c:0,e:"Le dialogue et le respect des règles permettent de résoudre le désaccord."}
+ ]
+};
+Object.entries(cycleAddedQuestions10).forEach(([subject,questions])=>{
+ if(!cycleExtraOther10[subject]) cycleExtraOther10[subject]=[];
+ cycleExtraOther10[subject].push(...questions.map(q=>({...q,level:"Entraînement · 10e LS",a:q.a,c:q.c,e:q.e})));
+});
+/* Corrige la traçabilité des thèmes et mélange aussi les choix de réponse. */
+function cycleShuffleQuestion(q){
+ const choices=shuffle(q.a.map((value,index)=>({value,correct:index===q.c})));
+ return {...q,a:choices.map(x=>x.value),c:choices.findIndex(x=>x.correct),topic:q.t||"Autres"};
+}
+
 allQuestions=function(){
  const base=cycleBaseAllQuestions();
  const year=$("#year").value,subject=$("#subject").value,term=$("#term").value;
@@ -726,7 +859,8 @@ cycleStartMini=function(){
  if(!selected.length){alert("Sélectionne au moins un thème.");return;}
  const count=Number($("#cycleMiniCount")?.value||20);
  const pool=allQuestions().filter(q=>selected.includes(q.t||"Autres"));
- const questions=shuffle(pool).slice(0,count).map(q=>({...q}));
+ const uniquePool=[...new Map(pool.map(q=>[q.q,q])).values()];
+ const questions=shuffle(uniquePool).slice(0,count).map(cycleShuffleQuestion);
  if(!questions.length){alert("Aucune question disponible pour ces thèmes.");return;}
  cycleMiniState={questions,answers:{},index:0,finished:false,year:$("#year").value,path:$("#path").value,subject:lang,term:$("#term").value,selectedThemes:selected};
  cycleRenderMini();

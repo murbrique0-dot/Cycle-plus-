@@ -1143,6 +1143,29 @@ for(const [year,subjects] of Object.entries(cycleLVFinal)){
  }
 }
 
+
+/* Le troisième trimestre est aussi couvert pour les domaines artistiques et corporels. */
+const cycleTerm3Extras={
+'9e':{
+arts:{t:"Arts visuels · intention et interprétation",lesson:"Relier les choix plastiques à une intention et justifier son interprétation par des indices observables.",q:"Comment justifier une interprétation ?",a:["Avec des éléments visibles de l'œuvre","Avec une supposition","Avec le prix seul"],c:0,e:"Une interprétation s'appuie sur des indices observables.",q2:"Qu'est-ce qu'un point de vue en image ?",a2:["La position depuis laquelle la scène est représentée","Le format du fichier","Le nom du musée"],c2:0,e2:"Le point de vue influence la manière dont le sujet est montré."},
+music:{t:"Musique · écoute et expression",lesson:"Décrire une œuvre à partir de l'écoute : structure, contrastes, nuances, tempo, instrumentation et atmosphère.",q:"Que signifie « forte » ?",a:["Jouer fort","Jouer lentement","Jouer aigu"],c:0,e:"Forte indique une intensité sonore forte.",q2:"Quel terme indique une augmentation progressive du volume ?",a2:["Crescendo","Diminuendo","Adagio"],c2:0,e2:"Crescendo indique une augmentation progressive de l'intensité."},
+pe:{t:"Corps et mouvement · coopération",lesson:"Communiquer, respecter les rôles et les règles et adapter les stratégies aux situations de jeu.",q:"Quel comportement favorise la coopération ?",a:["Communiquer et respecter les rôles","Garder toujours le ballon","Ignorer les règles"],c:0,e:"La coopération repose sur la communication et le respect.",q2:"Que faire en cas de désaccord sur une règle ?",a2:["Échanger calmement et appliquer la règle commune","Insulter l'autre équipe","Ignorer toutes les règles"],c2:0,e2:"Le dialogue et les règles communes permettent de résoudre le désaccord."}
+},
+'11e':{
+arts:{t:"Arts visuels · présentation et critique",lesson:"Présenter une production, expliquer ses intentions et justifier les choix réalisés. Formuler un regard critique constructif.",q:"Une présentation pertinente doit…",a:["Relier les choix à l'intention du projet","Éviter toute explication","Décrire uniquement le matériel"],c:0,e:"La présentation explique les choix et le sens du travail.",q2:"Quel commentaire critique est constructif ?",a2:["Un commentaire précis et respectueux","Une attaque personnelle","Un jugement sans exemple"],c2:0,e2:"Un retour utile est précis, respectueux et propose une piste."},
+music:{t:"Musique · écoute critique et culture",lesson:"Comparer des œuvres, situer des contextes et justifier une appréciation par des observations précises.",q:"Quel argument est pertinent dans une critique musicale ?",a:["Une observation précise sur le rythme ou le timbre","Une préférence sans explication","Une supposition"],c:0,e:"Une critique argumentée s'appuie sur des caractéristiques entendues.",q2:"Comparer deux versions permet d'étudier…",a2:["Les choix d'interprétation","Le prix des instruments","La taille de la salle"],c2:0,e2:"Les interprètes peuvent varier tempo, nuances et instrumentation."},
+pe:{t:"Corps et mouvement · responsabilité et bilan",lesson:"Évaluer ses progrès, coopérer, assumer des rôles et contribuer à un environnement de pratique sûr et respectueux.",q:"Quel élément rend un bilan personnel utile ?",a:["Des observations concrètes sur les progrès","Une note sans explication","Une comparaison humiliante"],c:0,e:"Un bilan utile décrit les acquis et les pistes de progrès.",q2:"Quel comportement favorise un cadre inclusif ?",a2:["Respecter les différences et adapter la coopération","Exclure les débutants","Se moquer des erreurs"],c2:0,e2:"Le respect et l'adaptation permettent à chacun de participer."}
+}
+};
+for(const [year,subjects] of Object.entries(cycleTerm3Extras)){
+ for(const [subject,x] of Object.entries(subjects)){
+  curriculum[year][subject]=curriculum[year][subject]||[];
+  if(!curriculum[year][subject].some(c=>c.trimestre===3&&c.t===x.t)){
+   curriculum[year][subject].push({trimestre:3,t:x.t,level:year+" · progression indicative",lesson:x.lesson,q:x.q,a:x.a,c:x.c,e:x.e,questions:[{q:x.q2,a:x.a2,c:x.c2,e:x.e2,t:x.t}]});
+  }
+ }
+}
+
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
 render();
 

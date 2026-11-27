@@ -599,6 +599,82 @@ render=function(){
  cycleOldRender();
 };
 openLesson=cycleOpenLesson;
+
+/* CYCLE+ : banque enrichie et mini-tests par thèmes du programme */
+const cycleBaseAllQuestions=allQuestions;
+const cycleExtraMath10=[
+{trimestre:1,t:"Nombres relatifs et priorités",q:"Calcule : −7 + 3 × 4.",a:["5","−16","−4","19"],c:0,e:"On effectue d'abord la multiplication : 3 × 4 = 12, puis −7 + 12 = 5."},
+{trimestre:1,t:"Nombres relatifs et priorités",q:"Calcule : (−18) ÷ 3 − 2.",a:["−8","−4","8","−6"],c:0,e:"−18 ÷ 3 = −6, puis −6 − 2 = −8."},
+{trimestre:1,t:"Nombres relatifs et priorités",q:"Quelle est la valeur de 5 − (−9) ?",a:["14","−4","4","−14"],c:0,e:"Soustraire un nombre négatif revient à additionner : 5 + 9 = 14."},
+{trimestre:1,t:"Fractions et calculs",q:"Calcule : 3/4 + 1/8.",a:["7/8","4/12","1/2","5/8"],c:0,e:"3/4 = 6/8, donc 6/8 + 1/8 = 7/8."},
+{trimestre:1,t:"Fractions et calculs",q:"Calcule : 5/6 − 1/3.",a:["1/2","4/3","2/3","1/3"],c:0,e:"1/3 = 2/6, donc 5/6 − 2/6 = 3/6 = 1/2."},
+{trimestre:1,t:"Fractions et calculs",q:"Calcule : 2/5 × 15/4.",a:["3/2","30/20","2/9","17/9"],c:0,e:"(2 × 15)/(5 × 4) = 30/20 = 3/2."},
+{trimestre:1,t:"Proportionnalité et pourcentages",q:"Un article coûte 80 CHF. Il bénéficie d'une réduction de 15 %. Quel est son nouveau prix ?",a:["68 CHF","65 CHF","72 CHF","75 CHF"],c:0,e:"15 % de 80 = 12 CHF. 80 − 12 = 68 CHF."},
+{trimestre:1,t:"Proportionnalité et pourcentages",q:"Pour 4 personnes, une recette demande 300 g de farine. Quelle quantité faut-il pour 6 personnes ?",a:["450 g","400 g","500 g","600 g"],c:0,e:"Le coefficient est 6/4 = 1,5. 300 × 1,5 = 450 g."},
+{trimestre:1,t:"Proportionnalité et pourcentages",q:"Un prix passe de 50 CHF à 60 CHF. Quel est le pourcentage d'augmentation ?",a:["20 %","10 %","15 %","25 %"],c:0,e:"L'augmentation est de 10 CHF. 10/50 = 0,20, soit 20 %."},
+{trimestre:1,t:"Puissances et notation scientifique",q:"Quelle est la valeur de 2⁵ ?",a:["32","10","25","64"],c:0,e:"2⁵ = 2 × 2 × 2 × 2 × 2 = 32."},
+{trimestre:1,t:"Puissances et notation scientifique",q:"Écris 0,00072 en notation scientifique.",a:["7,2 × 10⁻⁴","72 × 10⁻⁵","7,2 × 10⁴","0,72 × 10⁻³"],c:0,e:"On déplace la virgule de quatre rangs vers la droite : 7,2 × 10⁻⁴."},
+{trimestre:1,t:"Puissances et notation scientifique",q:"Simplifie : 10³ × 10⁴.",a:["10⁷","10¹²","10¹","10⁻¹"],c:0,e:"Lors d'une multiplication de puissances de même base, on additionne les exposants : 3 + 4 = 7."},
+{trimestre:1,t:"Calcul littéral et distributivité",q:"Développe : 3(2x − 5).",a:["6x − 15","6x − 5","5x − 15","6x + 15"],c:0,e:"On multiplie chaque terme par 3 : 3 × 2x = 6x et 3 × (−5) = −15."},
+{trimestre:1,t:"Calcul littéral et distributivité",q:"Réduis : 4a + 7 − 2a + 3.",a:["2a + 10","6a + 10","2a + 4","6a + 4"],c:0,e:"On regroupe les termes semblables : 4a − 2a = 2a et 7 + 3 = 10."},
+{trimestre:1,t:"Calcul littéral et distributivité",q:"Factorise : 6x + 18.",a:["6(x + 3)","3(2x + 18)","6(x + 18)","x(6 + 18)"],c:0,e:"Le facteur commun est 6 : 6x + 18 = 6(x + 3)."},
+{trimestre:1,t:"Équations du premier degré",q:"Résous : 5x − 7 = 18.",a:["x = 5","x = 11","x = 2","x = 25"],c:0,e:"On ajoute 7 : 5x = 25, puis on divise par 5 : x = 5."},
+{trimestre:1,t:"Équations du premier degré",q:"Résous : 3(x + 2) = 21.",a:["x = 5","x = 7","x = 9","x = 3"],c:0,e:"On divise par 3 : x + 2 = 7, donc x = 5."},
+{trimestre:1,t:"Équations du premier degré",q:"Résous : 7x + 4 = 3x + 20.",a:["x = 4","x = 6","x = 16","x = −4"],c:0,e:"On regroupe : 7x − 3x = 20 − 4, donc 4x = 16 et x = 4."},
+{trimestre:2,t:"Fonctions et graphiques",q:"Pour f(x) = 3x − 2, calcule f(5).",a:["13","15","17","8"],c:0,e:"On remplace x par 5 : 3 × 5 − 2 = 13."},
+{trimestre:2,t:"Fonctions et graphiques",q:"Une fonction est donnée par f(x) = 2x + 1. Quelle est l'image de 0 ?",a:["1","0","2","−1"],c:0,e:"f(0) = 2 × 0 + 1 = 1."},
+{trimestre:2,t:"Fonctions et graphiques",q:"Le point (3 ; 8) appartient-il au graphique de f(x) = 2x + 2 ?",a:["Oui, car f(3) = 8","Non, car f(3) = 5","Oui, car f(3) = 6","Non, car f(3) = 10"],c:0,e:"f(3) = 2 × 3 + 2 = 8 : le point appartient au graphique."},
+{trimestre:2,t:"Théorème de Pythagore",q:"Un triangle rectangle a des côtés de l'angle droit de 6 cm et 8 cm. Quelle est l'hypoténuse ?",a:["10 cm","12 cm","14 cm","7 cm"],c:0,e:"c² = 6² + 8² = 36 + 64 = 100, donc c = 10 cm."},
+{trimestre:2,t:"Théorème de Pythagore",q:"L'hypoténuse mesure 13 cm et un côté de l'angle droit 5 cm. L'autre côté mesure…",a:["12 cm","8 cm","18 cm","10 cm"],c:0,e:"x² = 13² − 5² = 169 − 25 = 144, donc x = 12 cm."},
+{trimestre:2,t:"Théorème de Pythagore",q:"Un triangle de côtés 7 cm, 24 cm et 25 cm est-il rectangle ?",a:["Oui, car 7² + 24² = 25²","Non, car 7 + 24 ≠ 25","Oui, car 7² + 25² = 24²","Non, car 24² + 25² = 7²"],c:0,e:"49 + 576 = 625 = 25² : le triangle est rectangle."},
+{trimestre:2,t:"Théorème de Thalès",q:"Deux triangles sont en configuration de Thalès. Les côtés correspondants mesurent 3 cm et 6 cm pour le premier rapport. Si un autre côté du petit triangle mesure 4 cm, combien mesure le côté correspondant du grand ?",a:["8 cm","7 cm","6 cm","12 cm"],c:0,e:"Le coefficient d'agrandissement est 6/3 = 2. Le côté correspondant vaut 4 × 2 = 8 cm."},
+{trimestre:2,t:"Théorème de Thalès",q:"Sur deux droites sécantes, des segments correspondants mesurent 5 cm et 8 cm sur une droite, puis 10 cm et x sur l'autre. Calcule x si les droites sont parallèles.",a:["16 cm","13 cm","4 cm","20 cm"],c:0,e:"Les rapports sont égaux : 10/5 = x/8. Donc x = 16 cm."},
+{trimestre:2,t:"Théorème de Thalès",q:"Quel élément est indispensable pour appliquer le théorème de Thalès dans la configuration classique ?",a:["Des droites parallèles et des alignements","Deux angles droits obligatoires","Un triangle équilatéral","Des côtés tous égaux"],c:0,e:"La configuration classique repose sur deux droites sécantes coupées par des droites parallèles."},
+{trimestre:2,t:"Aires, volumes et mesures",q:"Calcule l'aire d'un triangle de base 10 cm et de hauteur 6 cm.",a:["30 cm²","60 cm²","16 cm²","40 cm²"],c:0,e:"A = base × hauteur ÷ 2 = 10 × 6 ÷ 2 = 30 cm²."},
+{trimestre:2,t:"Aires, volumes et mesures",q:"Quel est le volume d'un pavé droit de dimensions 4 cm, 3 cm et 5 cm ?",a:["60 cm³","12 cm³","20 cm³","45 cm³"],c:0,e:"V = longueur × largeur × hauteur = 4 × 3 × 5 = 60 cm³."},
+{trimestre:2,t:"Aires, volumes et mesures",q:"Convertis 2,4 m en centimètres.",a:["240 cm","24 cm","2 400 cm","0,24 cm"],c:0,e:"1 m = 100 cm, donc 2,4 × 100 = 240 cm."},
+{trimestre:2,t:"Transformations et géométrie",q:"Quelle transformation conserve les longueurs et les angles ?",a:["La rotation","L'agrandissement de rapport 2","La projection","La déformation"],c:0,e:"Une rotation est une isométrie : elle conserve les distances et les angles."},
+{trimestre:2,t:"Transformations et géométrie",q:"Un angle mesure 38°. Quel est son angle supplémentaire ?",a:["142°","52°","128°","152°"],c:0,e:"Deux angles supplémentaires ont une somme de 180° : 180 − 38 = 142°."},
+{trimestre:2,t:"Transformations et géométrie",q:"Dans un triangle, deux angles mesurent 48° et 67°. Le troisième mesure…",a:["65°","75°","55°","115°"],c:0,e:"La somme des angles d'un triangle vaut 180° : 180 − 48 − 67 = 65°."},
+{trimestre:3,t:"Statistiques",q:"Voici une série : 4, 6, 6, 8, 11. Quelle est la médiane ?",a:["6","7","8","4"],c:0,e:"La série est déjà ordonnée ; la valeur centrale est 6."},
+{trimestre:3,t:"Statistiques",q:"Calcule la moyenne de 8, 10, 12 et 14.",a:["11","10","12","44"],c:0,e:"(8 + 10 + 12 + 14) ÷ 4 = 44 ÷ 4 = 11."},
+{trimestre:3,t:"Statistiques",q:"Dans une classe de 25 élèves, 10 viennent à vélo. Quelle est la fréquence en pourcentage ?",a:["40 %","25 %","10 %","60 %"],c:0,e:"10/25 = 0,4, soit 40 %."},
+{trimestre:3,t:"Probabilités",q:"Un sac contient 4 boules rouges et 6 bleues. Quelle est la probabilité de tirer une rouge ?",a:["2/5","3/5","1/4","4/6"],c:0,e:"Il y a 4 boules rouges sur 10 : 4/10 = 2/5."},
+{trimestre:3,t:"Probabilités",q:"On lance un dé équilibré à six faces. Quelle est la probabilité d'obtenir un nombre supérieur à 4 ?",a:["1/3","1/2","1/6","2/3"],c:0,e:"Les issues favorables sont 5 et 6 : 2/6 = 1/3."},
+{trimestre:3,t:"Probabilités",q:"Une roue a 8 secteurs identiques, dont 3 verts. Quelle est la probabilité de ne pas tomber sur le vert ?",a:["5/8","3/8","1/8","3/5"],c:0,e:"Il y a 8 − 3 = 5 secteurs non verts, donc la probabilité est 5/8."}
+].map(q=>({...q,level:"Entraînement · 10e LS",a:q.a,c:q.c,e:q.e}));
+const cycleOldMiniSetup=cycleMiniSetup;
+const cycleOldStartMini=cycleStartMini;
+allQuestions=function(){
+ const base=cycleBaseAllQuestions();
+ if($("#year").value!=="10e"||$("#subject").value!=="maths")return base;
+ const term=$("#term").value;
+ const added=cycleExtraMath10.filter(q=>String(q.trimestre)===term);
+ const signatures=new Set(base.map(q=>q.q));
+ return [...base,...added.filter(q=>!signatures.has(q.q))].map((q,i)=>({...q,questionIndex:base.length+i}));
+};
+cycleMiniSetup=function(){
+ const lang=$("#subject").value;
+ if(["de","en","la"].includes(lang)){cycleOldMiniSetup();return;}
+ const qs=allQuestions();
+ const themes=[...new Set(qs.map(q=>q.t||"Autres").filter(Boolean))];
+ const counts=themes.map(t=>({t,n:qs.filter(q=>(q.t||"Autres")===t).length}));
+ const label=subjectLabel();
+ $("#view").innerHTML='<h2>Mini-test · '+label+'</h2><p class="muted">Choisis un ou plusieurs thèmes du trimestre, puis le nombre de questions. Les questions sont mélangées et ne sont pas répétées.</p><div class="card"><b>Thèmes à réviser</b><div class="grid" style="margin-top:12px">'+counts.map((x,i)=>'<label><input type="checkbox" class="cycleTopicChoice" value="'+x.t.replace(/"/g,'&quot;')+'" checked> <b>'+x.t+'</b> <span class="small muted">('+x.n+' question(s))</span></label>').join("")+'</div></div><label>Nombre de questions<br><select id="cycleMiniCount">'+[5,10,15,20,30,50,100].map(n=>'<option '+(n===20?'selected':'')+'>'+n+'</option>').join("")+'</select></label><p class="small muted">La plateforme utilise toutes les questions disponibles si la sélection en contient moins que le nombre demandé.</p><div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le test sur mes thèmes</button></div>';
+};
+cycleStartMini=function(){
+ const lang=$("#subject").value;
+ if(["de","en","la"].includes(lang)){cycleOldStartMini();return;}
+ const selected=[...document.querySelectorAll(".cycleTopicChoice:checked")].map(x=>x.value);
+ if(!selected.length){alert("Sélectionne au moins un thème.");return;}
+ const count=Number($("#cycleMiniCount")?.value||20);
+ const pool=allQuestions().filter(q=>selected.includes(q.t||"Autres"));
+ const questions=shuffle(pool).slice(0,count).map(q=>({...q}));
+ if(!questions.length){alert("Aucune question disponible pour ces thèmes.");return;}
+ cycleMiniState={questions,answers:{},index:0,finished:false,year:$("#year").value,path:$("#path").value,subject:lang,term:$("#term").value,selectedThemes:selected};
+ cycleRenderMini();
+};
+
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
 render();
 

@@ -243,9 +243,10 @@ la:[
 }};
 for(const y of Object.keys(L))for(const lang of ["de","en","la"])extraLessons[y][lang].push(...L[y][lang]);
 
-let done=JSON.parse(localStorage.getItem("cycleplus_done")||"{}");
-let grades=JSON.parse(localStorage.getItem("cycleplus_grades")||"[]");
-let assessmentHistory=JSON.parse(localStorage.getItem("cycleplus_assessments")||"[]");
+function cycleReadStorage(name,fallback){try{const raw=localStorage.getItem(name);if(raw===null)return fallback;const value=JSON.parse(raw);return value&&typeof value==="object"?value:fallback;}catch(error){console.warn("Donnée locale illisible :",name,error);return fallback;}}
+let done=cycleReadStorage("cycleplus_done",{});
+let grades=cycleReadStorage("cycleplus_grades",[]);
+let assessmentHistory=cycleReadStorage("cycleplus_assessments",[]);
 let page="home", qi=0, word=0, practiceAnswers={}, practiceValidated={}, evalState=null, timerId=null;
 let vocabSessionKey="",vocabSessionEntries=[],vocabSessionState=null;
 const $=s=>document.querySelector(s);
@@ -467,8 +468,8 @@ if("serviceWorker" in navigator && location.protocol!=="file:"){
 
 /* CYCLE+ activities : leçons, mini-tests et maîtrise */
 let cycleMiniState=null;
-let cycleMiniHistory=JSON.parse(localStorage.getItem("cycleplus_minitests")||"[]");
-let cycleMastery=JSON.parse(localStorage.getItem("cycleplus_mastery")||"{}");
+let cycleMiniHistory=cycleReadStorage("cycleplus_minitests",[]);
+let cycleMastery=cycleReadStorage("cycleplus_mastery",{});
 function cycleSaveMini(){localStorage.setItem("cycleplus_minitests",JSON.stringify(cycleMiniHistory));localStorage.setItem("cycleplus_mastery",JSON.stringify(cycleMastery));}
 function cycleMarkDone(i){done[key()+"_"+i]=true;save();cycleOpenLesson(i);}
 function cycleOpenLesson(i){

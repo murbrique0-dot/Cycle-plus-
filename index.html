@@ -429,6 +429,15 @@ $("#year").addEventListener("change",()=>{let y=$("#year").value;$("#path").inne
 ["path","subject"].forEach(id=>$("#"+id).addEventListener("change",()=>{}));
 $("#applySelection").addEventListener("click",()=>{qi=0;word=0;practiceAnswers={};practiceValidated={};clearInterval(timerId);timerId=null;evalState=null;cycleMiniState=null;window.vocabTheme='Tous';window.vocabReviewMode=false;render()});
 document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+
+window.addEventListener("error",event=>{
+ const view=document.querySelector("#view");
+ if(view){view.innerHTML='<div class="lesson"><h2>Erreur de chargement détectée</h2><p>Une fonction de CYCLE+ a rencontré un problème.</p><p class="small">Détail technique : '+String(event.message||"Erreur inconnue").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'</p><p>Cette information permettra de corriger le problème.</p></div>';}
+});
+window.addEventListener("unhandledrejection",event=>{
+ const view=document.querySelector("#view");
+ if(view){view.innerHTML='<div class="lesson"><h2>Erreur de chargement détectée</h2><p>Une opération de CYCLE+ a échoué.</p><p class="small">Détail technique : '+String(event.reason&&event.reason.message||event.reason||"Erreur inconnue").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'</p></div>';}
+});
 render();
 
 // Installation sur téléphone (Android/Chrome et navigateurs compatibles).

@@ -38,7 +38,7 @@ button{cursor:pointer;font-weight:700}button.primary{background:var(--blue);colo
 <label>Année<select id="year"><option>9e</option><option selected>10e</option><option>11e</option></select></label>
 <label>Parcours<select id="path"><option value="CT">CT</option><option value="LC">LC</option><option value="LS" selected>LS</option></select></label>
 <label>Trimestre<select id="term"><option value="1">Trimestre 1</option><option value="2">Trimestre 2</option><option value="3">Trimestre 3</option></select></label>
-<label>Matière<select id="subject"><option value="maths">Mathématiques</option><option value="fr">Français</option><option value="en">Anglais</option><option value="de">Allemand</option><option value="la">Latin (profil L)</option><option value="physics">Physique (profil sciences)</option><option value="dms">Démarches mathématiques et scientifiques (profil sciences)</option><option value="arts">Arts visuels</option><option value="music">Musique</option><option value="pe">Éducation physique</option><option value="biology">Biologie</option><option value="histoire">Histoire</option><option value="geo">Géographie</option><option value="info">Informatique (complément)</option></select></label>
+<label>Matière<select id="subject"><option value="maths">Mathématiques</option><option value="fr">Français</option><option value="en">Anglais</option><option value="de">Allemand</option><option value="la">Latin (profil L)</option><option value="de_lv">Allemand · lecture et communication (profil LV)</option><option value="en_lv">Anglais · lecture et communication (profil LV)</option><option value="physics">Physique (profil sciences)</option><option value="dms">Démarches mathématiques et scientifiques (profil sciences)</option><option value="arts">Arts visuels</option><option value="music">Musique</option><option value="pe">Éducation physique</option><option value="biology">Biologie</option><option value="histoire">Histoire</option><option value="geo">Géographie</option><option value="info">Informatique (complément)</option></select></label>
 <button id="applySelection" class="primary" type="button">Valider ma sélection</button>
 </div>
 <div class="layout"><aside class="sidebar">
@@ -1067,6 +1067,81 @@ allQuestions=function(){
  const seen=new Set(base.map(q=>q.q));
  return [...base,...nested.filter(q=>q.q&&!seen.has(q.q))].map((q,i)=>({...q,questionIndex:i,topic:q.t||"Autres"}));
 };
+
+
+/* Derniers domaines complémentaires : arts, musique, corps et profil langues vivantes. */
+const cycleFinalTopics={
+arts:{
+'9e':[
+["Observer et décrire une image","Décrire formes, lignes, couleurs, textures et cadrage avant de proposer une interprétation.","Quel terme désigne l'organisation des éléments dans une image ?",["La composition","Le tempo","La syntaxe"],0,"La composition organise les éléments visuels.","Quel contraste oppose le clair et le sombre ?",["Clair-obscur","Rime","Perspective sonore"],0,"Le clair-obscur oppose les valeurs claires et sombres."],
+["Techniques et matériaux","Comparer dessin, peinture, collage et volume. Choisir un matériau en fonction de l'effet recherché.","Quel procédé assemble des éléments découpés ?",["Le collage","Le cadrage","La perspective"],0,"Le collage assemble des éléments sur un support.","Quel procédé donne une impression de volume ?",["Les ombres et les valeurs","La ponctuation","Le tempo"],0,"Les ombres et les valeurs suggèrent le volume."]
+],
+'11e':[
+["Analyser une œuvre","Relier contexte, intention, composition, matériaux et réception. Distinguer description, interprétation et jugement.","Quel élément relève de l'analyse formelle ?",["La composition et les couleurs","Une rumeur sur l'artiste","Le prix seul"],0,"L'analyse formelle étudie les choix visibles de l'œuvre.","Comment justifier une interprétation ?",["Avec des indices observables","Avec une supposition","Sans regarder l'œuvre"],0,"Une interprétation s'appuie sur des éléments visibles."],
+["Projet et présentation","Développer une démarche personnelle, documenter les essais et expliquer les choix plastiques.","Pourquoi conserver des traces des essais ?",["Pour expliquer l'évolution du projet","Pour éviter la réflexion","Pour remplacer l'œuvre"],0,"Les traces rendent visible le processus créatif.","Quel retour critique est constructif ?",["Un commentaire précis et respectueux","Une attaque personnelle","Un jugement sans exemple"],0,"Un retour utile est précis, respectueux et propose une piste."]
+]},
+music:{
+'9e':[
+["Rythme et pulsation","Distinguer pulsation, rythme, tempo et mesure. Repérer durées et silences.","Qu'est-ce que le tempo ?",["La vitesse de la pulsation","La hauteur d'une note","Le texte"],0,"Le tempo indique la vitesse de la pulsation.","Une mesure à 3/4 contient combien de temps ?",["3","4","6"],0,"Le numérateur indique trois temps."],
+["Timbre et familles","Reconnaître hauteur, intensité, timbre et grandes familles instrumentales.","Le timbre permet de distinguer…",["La couleur sonore","La durée d'une pause","Le nombre de mesures"],0,"Le timbre caractérise la couleur d'un son.","La clarinette appartient à quelle famille ?",["Les bois","Les cordes frottées","Les percussions"],0,"La clarinette est un instrument à vent de la famille des bois."]
+],
+'11e':[
+["Forme et style musical","Analyser motifs, répétitions, contrastes, instrumentation et organisation d'une œuvre.","Qu'est-ce qu'une texture polyphonique ?",["Plusieurs lignes mélodiques indépendantes","Une seule mélodie sans accompagnement","Uniquement des silences"],0,"La polyphonie superpose plusieurs lignes mélodiques.","Quel élément aide à repérer la forme d'une œuvre ?",["La répétition et le contraste des sections","La taille du fichier","Le nom du lecteur"],0,"Les répétitions et contrastes structurent les sections."],
+["Interprétation et écoute critique","Comparer des interprétations et justifier une appréciation avec des observations sonores précises.","Que signifie « staccato » ?",["Notes détachées","Notes liées","Ralentissement"],0,"Staccato indique une articulation détachée.","Quel argument est pertinent dans une critique musicale ?",["Une observation précise sur le rythme ou le timbre","Une préférence sans explication","Une supposition"],0,"Une critique s'appuie sur des caractéristiques entendues."]
+]},
+pe:{
+'9e':[
+["Coordination et sécurité","Développer équilibre, coordination et maîtrise des gestes en respectant les règles de sécurité.","Quel élément aide à garder l'équilibre ?",["Ajuster sa posture et ses appuis","Fermer les yeux","Ignorer les consignes"],0,"La posture et les appuis contribuent à l'équilibre.","Pourquoi respecter l'espace de jeu ?",["Pour pratiquer en sécurité","Pour éviter les règles","Pour ralentir tous les joueurs"],0,"Respecter l'espace limite les collisions."],
+["Coopération et règles","Communiquer, respecter les règles et adapter son action aux partenaires.","Quel comportement favorise une équipe ?",["Communiquer et coopérer","Garder toujours le ballon","Ignorer les règles"],0,"La coopération repose sur la communication.","À quoi sert une règle de jeu ?",["À organiser l'activité","À empêcher toute stratégie","À supprimer l'équité"],0,"Les règles donnent un cadre commun."]
+],
+'11e':[
+["Réguler l'effort","Adapter l'intensité à un objectif, observer ses sensations et comprendre la récupération.","Pourquoi réguler l'intensité ?",["Pour l'adapter à l'objectif et à ses capacités","Pour rester toujours au maximum","Pour ignorer ses sensations"],0,"La régulation permet un effort adapté.","Quel facteur participe à la récupération ?",["Le repos adapté","L'effort maximal continu","L'absence de pause"],0,"Le repos contribue à la récupération."],
+["Tactique et responsabilité","Analyser une situation de jeu, choisir une stratégie collective et contribuer à un cadre inclusif.","Pourquoi observer les adversaires ?",["Pour anticiper et adapter sa stratégie","Pour éviter de jouer","Pour changer les règles"],0,"L'observation aide à prendre des décisions tactiques.","Quel comportement favorise l'inclusion ?",["Respecter les différences et coopérer","Exclure les débutants","Se moquer des erreurs"],0,"Le respect permet à chacun de participer."]
+]}
+};
+for(const [subject,years] of Object.entries(cycleFinalTopics)){
+ for(const [year,rows] of Object.entries(years)){
+  if(!curriculum[year][subject])curriculum[year][subject]=[];
+  rows.forEach((r,i)=>{
+   const term=i+1,title=r[0];
+   if(!curriculum[year][subject].some(c=>c.t===title)){
+    curriculum[year][subject].push({trimestre:term,t:title,level:year+" · progression indicative",lesson:r[1],q:r[2],a:r[3],c:r[4],e:r[5],questions:[{t:title,q:r[6],a:r[7],c:r[8],e:r[9]}]});
+   }
+  });
+ }
+}
+const cycleLVFinal={
+'10e':{
+de_lv:[
+["Compréhension et présentation","Comprendre un document plus long, repérer idées principales et détails puis présenter une information.","Quel élément repérer d'abord à l'écoute ?",["Le thème et la situation","Chaque mot isolé","L'accent uniquement"],0,"Le thème donne le sens global.","Quelle phrase introduit un exposé ?",["Heute möchte ich über … sprechen.","Ich bin gestern gegangen.","Es regnet."],0,"Cette expression signifie : aujourd'hui je voudrais parler de…"],
+["Interaction et opinion","Exprimer un avis, réagir poliment et justifier un point de vue avec des connecteurs.","Que signifie « meiner Meinung nach » ?",["à mon avis","par conséquent","malgré cela"],0,"L'expression introduit une opinion.","Quel mot marque une opposition ?",["allerdings","deshalb","zuerst"],0,"Allerdings marque une réserve ou une opposition."],
+["Lecture et production","Comprendre l'organisation d'un texte et rédiger une réponse cohérente.","Que signifie « zum Beispiel » ?",["par exemple","en revanche","finalement"],0,"Zum Beispiel introduit un exemple.","Quel élément relie les idées ?",["Les connecteurs logiques","La taille du texte","La police"],0,"Les connecteurs explicitent les relations entre idées."]
+],
+en_lv:[
+["Extended listening and speaking","Understand the main ideas and details in longer spoken documents. Present information clearly and answer questions.","What should you identify first when listening ?",["The topic and situation","Every isolated word","Only the accent"],0,"The topic and situation help you understand the overall meaning.","Which phrase introduces a presentation ?",["Today I am going to talk about…","I have went yesterday.","Because at the end."],0,"This phrase introduces a presentation."],
+["Opinions and interaction","Express and justify opinions, agree or disagree politely and develop an interaction.","Which expression politely disagrees ?",["I see your point, but…","You are wrong!","Whatever."],0,"It acknowledges the other view before disagreeing.","Which linker introduces contrast ?",["Nevertheless","Therefore","For example"],0,"Nevertheless introduces contrast or concession."],
+["Reading and structured writing","Analyse longer texts, identify tone and purpose and write structured responses.","What is the writer's purpose ?",["The reason why the text was written","The number of words","The font size"],0,"Purpose is what the writer wants to achieve.","Which phrase introduces a conclusion ?",["To sum up","For instance","On the other hand"],0,"To sum up introduces a summary."]
+]
+},
+'11e':{
+de_lv:[
+["Analyse de documents","Analyser des documents variés, distinguer faits et points de vue et inférer le sens de mots inconnus.","Que faire face à un mot inconnu ?",["Utiliser le contexte","Arrêter toute lecture","Choisir au hasard"],0,"Le contexte aide à inférer le sens.","Que signifie « deshalb » ?",["c'est pourquoi","bien que","avant"],0,"Deshalb introduit une conséquence."],
+["Débat et argumentation","Construire une argumentation, développer des exemples et répondre à des objections avec nuance.","Qu'est-ce qui renforce un argument ?",["Un exemple pertinent","Une répétition","Une attaque personnelle"],0,"Un exemple rend l'argument concret.","Que signifie « einerseits … andererseits » ?",["d'une part… d'autre part","parce que… donc","avant… après"],0,"L'expression présente deux aspects."],
+["Synthèse et communication","Synthétiser plusieurs informations, organiser une présentation et adapter le registre.","Quel est l'objectif d'une synthèse ?",["Reformuler les idées essentielles","Copier toutes les phrases","Ajouter des opinions"],0,"Une synthèse sélectionne et reformule les informations.","Que signifie « jedoch » ?",["toutefois","ensuite","parce que"],0,"Jedoch marque une opposition."]
+],
+en_lv:[
+["Analysing longer documents","Analyse longer written and spoken documents, identify tone, purpose and implicit information.","What does an inference require ?",["Clues and reasoned conclusions","Copying the title","Guessing without evidence"],0,"An inference combines clues and logical reasoning.","Which word signals contrast ?",["Whereas","Because","Therefore"],0,"Whereas introduces a contrast."],
+["Debate and persuasive language","Develop a position, support it with evidence and address counterarguments respectfully.","What is a counterargument ?",["A view that challenges the main position","A repeated introduction","A spelling correction"],0,"A counterargument presents an opposing view.","Which phrase introduces a concession ?",["Although this is true…","For this reason…","First of all…"],0,"Although introduces a concession."],
+["Synthesis and formal communication","Synthesize several sources, structure formal writing and adapt language to purpose and audience.","What should a good synthesis do ?",["Combine and reformulate main ideas","Copy every sentence","Add unsupported claims"],0,"A synthesis selects and connects relevant ideas.","Which phrase suits a formal conclusion ?",["In conclusion","Gonna finish","Whatever"],0,"In conclusion is suitable in formal writing."]
+]
+}
+};
+for(const [year,subjects] of Object.entries(cycleLVFinal)){
+ for(const [subject,rows] of Object.entries(subjects)){
+  curriculum[year][subject]=curriculum[year][subject]||[];
+  rows.forEach((r,i)=>curriculum[year][subject].push({trimestre:i+1,t:r[0],level:"LS · profil Langues vivantes",lesson:r[1],q:r[2],a:r[3],c:r[4],e:r[5],questions:[{q:r[6],a:r[7],c:r[8],e:r[9]}]}));
+ }
+}
 
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
 render();

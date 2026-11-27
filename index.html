@@ -645,11 +645,55 @@ const cycleExtraMath10=[
 ].map(q=>({...q,level:"Entraînement · 10e LS",a:q.a,c:q.c,e:q.e}));
 const cycleOldMiniSetup=cycleMiniSetup;
 const cycleOldStartMini=cycleStartMini;
+
+const cycleExtraOther10={
+fr:[
+{trimestre:1,t:"Phrase complexe et subordination",q:"Dans « Je pense que tu as raison », quelle est la proposition subordonnée ?",a:["que tu as raison","Je pense","tu as raison","que tu"],c:0,e:"La subordonnée conjonctive est introduite par « que » et complète « Je pense »."},
+{trimestre:2,t:"Accord du participe passé",q:"Complète : « Les chansons que nous avons ___ hier sont magnifiques. »",a:["chantées","chanté","chantée","chantés"],c:0,e:"Le COD « que » reprend « les chansons » et précède le participe : féminin pluriel."},
+{trimestre:3,t:"Connecteurs logiques et argumentation",q:"Quel connecteur exprime une conséquence ?",a:["Par conséquent","Cependant","D'abord","Même si"],c:0,e:"« Par conséquent » introduit une conséquence."}
+],
+en:[
+{trimestre:1,t:"Present perfect",q:"Choose the correct sentence.",a:["She has lived here for two years.","She have lived here for two years.","She has live here for two years.","She living here for two years."],c:0,e:"Avec she, on utilise has + participe passé : has lived."},
+{trimestre:2,t:"First conditional",q:"Complete: If it rains tomorrow, we ___ at home.",a:["will stay","would stayed","stays","stay yesterday"],c:0,e:"Le first conditional utilise If + présent, puis will + base verbale."},
+{trimestre:3,t:"Passive voice",q:"Choose the correct passive form: “The book ___ in 1998.”",a:["was published","published","is publish","has publish"],c:0,e:"Pour une action passée au passif : was/were + participe passé."}
+],
+de:[
+{trimestre:1,t:"Verbes modaux",q:"Complète : « Ich ___ heute meine Hausaufgaben machen. » (je dois)",a:["muss","musst","müssen","müsst"],c:0,e:"Avec ich, le verbe modal müssen se conjugue muss."},
+{trimestre:2,t:"Ordre des mots",q:"Choisis la phrase correcte avec « weil ».",a:["Ich bleibe zu Hause, weil ich krank bin.","Ich bleibe zu Hause, weil bin ich krank.","Ich bleibe zu Hause, weil ich bin krank.","Weil ich krank bin ich bleibe zu Hause."],c:0,e:"Dans une subordonnée introduite par weil, le verbe conjugué se place à la fin."},
+{trimestre:3,t:"Prétérit et parfait",q:"Quel est le parfait correct de « ich gehe » ?",a:["ich bin gegangen","ich habe gegangen","ich bin gehen","ich habe geht"],c:0,e:"Gehen forme son parfait avec sein : ich bin gegangen."}
+],
+physics:[
+{trimestre:1,t:"Vitesse et mouvement",q:"Un cycliste parcourt 18 km en 1,5 h à vitesse constante. Quelle est sa vitesse moyenne ?",a:["12 km/h","27 km/h","9 km/h","18 km/h"],c:0,e:"v = distance ÷ durée = 18 ÷ 1,5 = 12 km/h."},
+{trimestre:2,t:"Électricité et circuits",q:"Dans un circuit en série, quelle grandeur est identique dans chaque dipôle ?",a:["L'intensité du courant","La tension","La résistance","La puissance"],c:0,e:"Dans un circuit en série, l'intensité est la même en tout point."},
+{trimestre:3,t:"Énergie et puissance",q:"Un appareil de 100 W fonctionne pendant 2 h. Quelle énergie consomme-t-il ?",a:["200 Wh","50 Wh","100 Wh","2 000 Wh"],c:0,e:"Énergie = puissance × durée = 100 W × 2 h = 200 Wh."}
+],
+biology:[
+{trimestre:1,t:"Cellules et organisation du vivant",q:"Quel organite contient l'essentiel de l'information génétique dans une cellule animale ?",a:["Le noyau","La membrane","Le cytoplasme","La vacuole"],c:0,e:"Le noyau contient la majeure partie de l'ADN d'une cellule animale."},
+{trimestre:2,t:"Photosynthèse",q:"Quels éléments une plante utilise-t-elle pour réaliser la photosynthèse ?",a:["Eau, dioxyde de carbone et lumière","Oxygène, glucose et obscurité","Azote, sel et chaleur uniquement","Glucose et oxygène uniquement"],c:0,e:"La photosynthèse utilise l'eau et le CO₂ grâce à l'énergie lumineuse."},
+{trimestre:3,t:"Respiration cellulaire",q:"Quel est le rôle principal de la respiration cellulaire ?",a:["Libérer de l'énergie utilisable à partir de nutriments","Fabriquer la lumière","Transformer l'oxygène en azote","Stocker toute l'énergie sans la libérer"],c:0,e:"La respiration cellulaire permet de transférer l'énergie des nutriments vers une forme utilisable par la cellule."}
+],
+histoire:[
+{trimestre:1,t:"Renaissance et humanisme",q:"Quelle idée caractérise particulièrement l'humanisme de la Renaissance ?",a:["La confiance dans les capacités de l'être humain et le savoir","Le refus de toute connaissance antique","La disparition de l'imprimerie","Le rejet systématique des sciences"],c:0,e:"Les humanistes valorisent l'étude, l'esprit critique et les capacités humaines."},
+{trimestre:2,t:"Révolutions politiques",q:"Quel événement marque le début symbolique de la Révolution française en 1789 ?",a:["La prise de la Bastille","La bataille de Waterloo","Le congrès de Vienne","La déclaration d'indépendance américaine"],c:0,e:"La prise de la Bastille a lieu le 14 juillet 1789."},
+{trimestre:3,t:"Révolution industrielle",q:"Quelle transformation est caractéristique de la première révolution industrielle ?",a:["Le développement des machines et des usines","Le retour général au travail artisanal à domicile","La disparition du charbon","La fin des villes"],c:0,e:"La mécanisation et le développement des usines transforment la production et les sociétés."}
+],
+geo:[
+{trimestre:1,t:"Population et densité",q:"Une région compte 120 000 habitants sur 600 km². Quelle est sa densité moyenne ?",a:["200 habitants/km²","720 habitants/km²","20 habitants/km²","2 000 habitants/km²"],c:0,e:"Densité = population ÷ surface = 120 000 ÷ 600 = 200 habitants/km²."},
+{trimestre:2,t:"Ressources et développement durable",q:"Quelle action correspond le mieux à une gestion durable des ressources ?",a:["Réduire le gaspillage et favoriser le réemploi","Augmenter systématiquement les déchets","Utiliser une ressource sans limite","Ignorer les effets sur les écosystèmes"],c:0,e:"La réduction du gaspillage et le réemploi limitent la pression sur les ressources."},
+{trimestre:3,t:"Mondialisation et échanges",q:"Que désigne la mondialisation ?",a:["L'intensification des relations et des échanges à l'échelle mondiale","La fermeture complète des pays","La disparition de tous les transports","L'arrêt des communications internationales"],c:0,e:"La mondialisation correspond au renforcement des échanges et des interdépendances entre régions du monde."}
+],
+info:[
+{trimestre:1,t:"Algorithmes et programmation",q:"Dans un algorithme, que représente une condition ?",a:["Un test qui permet de choisir entre des actions","Une répétition obligatoire","Un nom de fichier","Une unité de mémoire"],c:0,e:"Une condition évalue un test vrai ou faux et oriente le déroulement du programme."},
+{trimestre:2,t:"Web et HTML",q:"Quel élément HTML sert à créer un lien cliquable ?",a:["<a>","<p>","<img>","<h1>"],c:0,e:"La balise a définit un lien hypertexte, généralement avec l'attribut href."},
+{trimestre:3,t:"Sécurité numérique",q:"Quelle pratique protège le mieux un compte en ligne ?",a:["Un mot de passe unique et l'authentification à deux facteurs","Le même mot de passe partout","Partager son code de connexion","Désactiver les mises à jour"],c:0,e:"Un mot de passe unique limite les réutilisations et le second facteur renforce la protection."}
+]
+};
+
 allQuestions=function(){
  const base=cycleBaseAllQuestions();
- if($("#year").value!=="10e"||$("#subject").value!=="maths")return base;
- const term=$("#term").value;
- const added=cycleExtraMath10.filter(q=>String(q.trimestre)===term);
+ if($("#year").value!=="10e")return base;
+ const subject=$("#subject").value,term=$("#term").value;
+ const added=(subject==="maths"?cycleExtraMath10:(cycleExtraOther10[subject]||[])).filter(q=>String(q.trimestre)===term);
  const signatures=new Set(base.map(q=>q.q));
  return [...base,...added.filter(q=>!signatures.has(q.q))].map((q,i)=>({...q,questionIndex:base.length+i}));
 };

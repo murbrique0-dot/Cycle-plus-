@@ -242,7 +242,7 @@ la:[
 {trimestre:3,t:"Analyser une phrase latine",level:"Grammaire",lesson:"Repère le verbe et sa personne, puis le nominatif qui peut être sujet. L'accusatif marque souvent le complément d'objet direct ; vérifie aussi les accords de l'adjectif.",q:"Dans « Puella rosam portat », quel mot est le sujet ?",a:["Puella","rosam","portat"],c:0,e:"Puella est au nominatif et accomplit l'action."}
 ]
 }};
-for(const y of Object.keys(L))for(const lang of ["de","en","la"])extraLessons[y][lang].push(...L[y][lang]);
+for(const y of Object.keys(L)){if(!extraLessons[y])extraLessons[y]={};for(const lang of ["de","en","la"]){if(!extraLessons[y][lang])extraLessons[y][lang]=[];if(Array.isArray(L[y][lang]))extraLessons[y][lang].push(...L[y][lang]);}}
 
 function cycleReadStorage(name,fallback){try{const raw=localStorage.getItem(name);if(raw===null)return fallback;const value=JSON.parse(raw);return value&&typeof value==="object"?value:fallback;}catch(error){console.warn("Donnée locale illisible :",name,error);return fallback;}}
 let done=cycleReadStorage("cycleplus_done",{});

@@ -47,6 +47,36 @@ button{cursor:pointer;font-weight:700}button.primary{background:var(--blue);colo
 <div class="footer">CYCLE+ est une plateforme de révision en développement. Les contenus sont des supports d’entraînement indicatifs et doivent être comparés aux cours et objectifs donnés par les enseignants du Cycle à Genève. Les contenus sont des fiches de révision originales et indicatives, organisées par année. Ils ne remplacent pas les moyens d’enseignement, les listes de vocabulaire et les objectifs communiqués par les enseignants.</div>
 </main>
 <script>
+/* CYCLE+ : gestion précoce des erreurs et des clics de navigation */
+(function(){
+ function showCycleError(message){
+  const view=document.getElementById("view");
+  if(view){
+   view.innerHTML='<div class="lesson"><h2>Erreur de CYCLE+ détectée</h2><p>Le chargement des activités a été interrompu.</p><p class="small">Détail : '+String(message||"Erreur inconnue").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'</p></div>';
+  }
+ }
+ window.addEventListener("error",function(event){showCycleError(event.message||"Erreur JavaScript");});
+ window.addEventListener("unhandledrejection",function(event){showCycleError(event.reason&&event.reason.message||event.reason||"Erreur asynchrone");});
+ document.addEventListener("click",function(event){
+  const navButton=event.target&&event.target.closest?event.target.closest(".navbtn[data-page]"):null;
+  const applyButton=event.target&&event.target.closest?event.target.closest("#applySelection"):null;
+  if(navButton){
+   event.preventDefault();event.stopImmediatePropagation();
+   if(typeof go==="function")go(navButton.dataset.page);
+   return;
+  }
+  if(applyButton){
+   event.preventDefault();event.stopImmediatePropagation();
+   if(typeof render==="function"&&typeof qi!=="undefined"){
+    qi=0;word=0;practiceAnswers={};practiceValidated={};
+    if(typeof timerId!=="undefined"&&timerId!==null)clearInterval(timerId);
+    timerId=null;evalState=null;cycleMiniState=null;
+    window.vocabTheme="Tous";window.vocabReviewMode=false;render();
+   }
+  }
+ },true);
+})();
+
 const data={
  maths:[
   {t:"Expressions algébriques",level:"Bases",lesson:"Une expression algébrique contient des nombres, des lettres et des opérations. On réduit les termes semblables : 3x + 2x = 5x. On distribue : 2(x + 4) = 2x + 8.",q:"Réduis : 7a − 3a + 2",a:["4a + 2","10a","4a − 2"],c:0,e:"7a et −3a sont semblables : 7a − 3a = 4a. Le +2 reste."},

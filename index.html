@@ -691,15 +691,29 @@ info:[
 
 allQuestions=function(){
  const base=cycleBaseAllQuestions();
- if($("#year").value!=="10e")return base;
- const subject=$("#subject").value,term=$("#term").value;
- const added=(subject==="maths"?cycleExtraMath10:(cycleExtraOther10[subject]||[])).filter(q=>String(q.trimestre)===term);
+ const year=$("#year").value,subject=$("#subject").value,term=$("#term").value;
+ let added=[];
+ if(year==="10e"){
+  added=(subject==="maths"?cycleExtraMath10:(cycleExtraOther10[subject]||[])).filter(q=>String(q.trimestre)===term);
+ }
  const signatures=new Set(base.map(q=>q.q));
- return [...base,...added.filter(q=>!signatures.has(q.q))].map((q,i)=>({...q,questionIndex:base.length+i}));
+ let result=[...base,...added.filter(q=>!signatures.has(q.q))];
+ if(["en","la"].includes(subject)){
+  const bank=((vocabByYear[year]||{})[subject]||[]);
+  const vocabularyQuestions=[];
+  bank.forEach(w=>{
+   [false,true].forEach(reverse=>{
+    const correct=reverse?w[0]:w[1],pool=shuffle([...new Set(bank.filter(x=>x[1]!==w[1]).map(x=>reverse?x[0]:x[1]))]).slice(0,3);
+    const options=shuffle([correct,...pool]);
+    vocabularyQuestions.push({t:w[2],q:reverse?"Quel mot correspond à « "+w[1]+" » ?":"Que signifie « "+w[0]+" » ?",a:options,c:options.indexOf(correct),e:"« "+w[0]+" » signifie « "+w[1]+" ».",level:"Vocabulaire"});
+   });
+  });
+  result=[...result,...vocabularyQuestions];
+ }
+ return result.map((q,i)=>({...q,questionIndex:i}));
 };
 cycleMiniSetup=function(){
  const lang=$("#subject").value;
- if(["de","en","la"].includes(lang)){cycleOldMiniSetup();return;}
  const qs=allQuestions();
  const themes=[...new Set(qs.map(q=>q.t||"Autres").filter(Boolean))];
  const counts=themes.map(t=>({t,n:qs.filter(q=>(q.t||"Autres")===t).length}));
@@ -708,7 +722,6 @@ cycleMiniSetup=function(){
 };
 cycleStartMini=function(){
  const lang=$("#subject").value;
- if(["de","en","la"].includes(lang)){cycleOldStartMini();return;}
  const selected=[...document.querySelectorAll(".cycleTopicChoice:checked")].map(x=>x.value);
  if(!selected.length){alert("Sélectionne au moins un thème.");return;}
  const count=Number($("#cycleMiniCount")?.value||20);

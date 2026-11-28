@@ -156,19 +156,31 @@ function cycleStartLessonTest(i){
  cycleMiniState={questions:shuffle(qs),answers:{},index:0,finished:false,year:$('#year').value,path:$('#path').value,subject:$('#subject').value,term:$('#term').value,lessonTitle:c.t,lessonIndex:i};
  page='mini';render();
 }
-function cycleMiniSetup(){
+function cycleMiniSetup(lessonIndex=null){
+ window.cycleMiniLessonIndex=Number.isInteger(lessonIndex)?lessonIndex:null;
  const lang=$("#subject").value,year=$("#year").value,bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],isLang=["de","en","la"].includes(lang),themes=[...new Set(bank.map(x=>x[2]))],preferred=(year==="10e"&&lang==="de"&&themes.includes("Ferien"))?"Ferien":"Tous";
- $("#view").innerHTML='<h2>Mini-test · '+subjectLabel()+'</h2><p class="muted">Choisis le nombre de questions. Les mini-tests et révisions ne comptent pas dans la moyenne des grandes évaluations.</p>'+(isLang?'<label>Thème du vocabulaire<br><select id="cycleMiniTheme">'+["Tous",...themes].map(t=>'<option '+(t===preferred?'selected':'')+'>'+t+'</option>').join("")+'</select></label>':'<p class="muted">Questions issues des leçons disponibles pour ce trimestre.</p>')+'<label>Nombre de questions<br><select id="cycleMiniCount">'+[5,10,15,20,30,50,100].map(n=>'<option>'+n+'</option>').join("")+'</select></label><p class="small muted">Si la banque contient moins de questions que le nombre choisi, toutes les questions disponibles seront utilisées sans répétition.</p><div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le mini-test</button></div>';
+ const selectedChapter=window.cycleMiniLessonIndex===null?null:chapters()[window.cycleMiniLessonIndex];
+ const chapterMode=!!selectedChapter;
+ $("#view").innerHTML='<button onclick="go(\'courses\')">← Retour aux chapitres</button><h2>Mini-test · '+subjectLabel()+'</h2>'+(chapterMode?'<p class="muted">Chapitre : <b>'+selectedChapter.t+'</b>. Les questions porteront uniquement sur ce chapitre.</p>':'<p class="muted">Choisis le nombre de questions. Les mini-tests et révisions ne comptent pas dans la moyenne des grandes évaluations.</p>')+(isLang&&!chapterMode?'<label>Thème du vocabulaire<br><select id="cycleMiniTheme">'+["Tous",...themes].map(t=>'<option '+(t===preferred?'selected':'')+'>'+t+'</option>').join("")+'</select></label>':chapterMode?'<p class="muted">Questions associées à la leçon sélectionnée.</p>':'<p class="muted">Questions issues des leçons disponibles pour ce trimestre.</p>')+'<label>Nombre de questions<br><select id="cycleMiniCount">'+[5,10,15,20,30,50,100].map(n=>'<option>'+n+'</option>').join("")+'</select></label><p class="small muted">Si la banque contient moins de questions que le nombre choisi, toutes les questions disponibles seront utilisées sans répétition.</p><div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le mini-test</button></div>';
 }
 function cycleStartMini(){
- const lang=$("#subject").value,year=$("#year").value,isLang=["de","en","la"].includes(lang);let questions=[];
- if(isLang){
+ const lang=$("#subject").value,year=$("#year").value,isLang=["de","en","la"].includes(lang),lessonIndex=Number.isInteger(window.cycleMiniLessonIndex)?window.cycleMiniLessonIndex:null;let questions=[];
+ const count=Number($("#cycleMiniCount")?.value||10);
+ if(lessonIndex!==null){
+  const chapter=chapters()[lessonIndex];
+  if(!chapter){alert("Ce chapitre n'est plus sélectionné. Retourne à la liste des chapitres.");return;}
+  const pool=allQuestions().filter(q=>q.t===chapter.t);
+  const nested=(chapter.questions||[]).map(q=>({...q,t:q.t||chapter.t,topic:q.t||chapter.t}));
+  const merged=[...pool,...nested.filter(q=>!pool.some(p=>p.q===q.q))];
+  questions=shuffle(merged).slice(0,count).map(q=>({...q,topic:q.t||chapter.t}));
+ }else if(isLang){
   const bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],theme=$("#cycleMiniTheme")?$("#cycleMiniTheme").value:"Tous";
-  const selected=Array.isArray(window.cycleVocabThemes)&&window.cycleVocabThemes.length?window.cycleVocabThemes:null,entries=bank.filter(w=>selected?selected.includes(w[2]):(theme==="Tous"||w[2]===theme)),count=Number($("#cycleMiniCount")?.value||10);
-  if(lang==="de"){questions=germanVocabularyQuestions(entries,Math.max(count,30));}else{const make=(w,reverse)=>{const correct=reverse?w[0]:w[1],pool=entries.map(x=>reverse?x[0]:x[1]).filter(x=>x!==correct),opts=shuffle([correct,...shuffle([...new Set(pool)]).slice(0,3)]);return {t:w[2],q:reverse?'Traduis en latin : « '+w[1]+' »':'Que signifie « '+w[0]+' » ?',a:opts,c:opts.indexOf(correct),e:w[0]+' = '+w[1]+'.',topic:w[2]};};questions=shuffle(entries.flatMap(w=>[make(w,false),make(w,true)])).slice(0,count);}
- }else{const count=Number($("#cycleMiniCount")?.value||10);questions=shuffle(allQuestions()).slice(0,count).map(q=>({...q,topic:q.t}));}
+  const selected=Array.isArray(window.cycleVocabThemes)&&window.cycleVocabThemes.length?window.cycleVocabThemes:null,entries=bank.filter(w=>selected?selected.includes(w[2]):(theme==="Tous"||w[2]===theme));
+  if(lang==="de"){questions=germanVocabularyQuestions(entries,Math.max(count,30)).slice(0,count);}else{const make=(w,reverse)=>{const correct=reverse?w[0]:w[1],pool=entries.map(x=>reverse?x[0]:x[1]).filter(x=>x!==correct),opts=shuffle([correct,...shuffle([...new Set(pool)]).slice(0,3)]);return {t:w[2],q:reverse?'Traduis en latin : « '+w[1]+' »':'Que signifie « '+w[0]+' » ?',a:opts,c:opts.indexOf(correct),e:w[0]+' = '+w[1]+'.',topic:w[2]};};questions=shuffle(entries.flatMap(w=>[make(w,false),make(w,true)])).slice(0,count);}
+ }else{questions=shuffle(allQuestions()).slice(0,count).map(q=>({...q,topic:q.t}));}
  if(!questions.length){alert("Aucune question disponible pour cette sélection.");return;}
- cycleMiniState={questions:questions,answers:{},index:0,finished:false,year:year,path:$("#path").value,subject:lang,term:$("#term").value};
+ cycleMiniState={questions:questions,answers:{},index:0,finished:false,year:year,path:$("#path").value,subject:lang,term:$("#term").value,lessonTitle:lessonIndex!==null?chapters()[lessonIndex].t:null,lessonIndex:lessonIndex};
+ window.cycleMiniLessonIndex=null;
  cycleRenderMini();
 }
 function cycleRenderMini(){

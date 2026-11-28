@@ -659,6 +659,65 @@ for(const year of ["9e","10e","11e"]){
   }
  }
 }
+
+
+// Approfondissement pédagogique des chapitres principaux de 10e.
+const cycleLessonDeepening10={
+ "maths": [
+  "Écris chaque étape et vérifie le résultat en remplaçant x dans l'équation. Pour un problème, définis l'inconnue et l'unité attendue.",
+  "Pour une fonction, prépare un tableau de valeurs, place les points puis vérifie les coordonnées en recalculant les images.",
+  "Pour une démonstration géométrique, indique la propriété utilisée avant le calcul. Vérifie toujours les unités et la cohérence du résultat."
+ ],
+ "fr": [
+  "Repère d'abord le verbe conjugué et son sujet. Distingue la nature d'un mot (ce qu'il est) de sa fonction (son rôle dans la phrase).",
+  "Choisis le temps selon le rôle de l'action : description ou habitude, action ponctuelle, action antérieure. Vérifie la cohérence temporelle du récit.",
+  "Formule une thèse claire, développe chaque argument et illustre-le par un exemple précis. Choisis des connecteurs qui expriment le bon lien logique."
+ ],
+ "en": [
+  "Repère le sujet et le temps demandé. Apprends les verbes irréguliers avec leurs trois formes et vérifie les auxiliaires dans les questions et négations.",
+  "Le past simple présente un événement terminé ; le past continuous décrit une action en cours. Les deux temps peuvent apparaître dans la même phrase.",
+  "Pour exprimer une opinion, donne une raison et un exemple. Relie tes phrases avec des connecteurs variés."
+ ],
+ "de": [
+  "Apprends chaque nom allemand avec son article et son pluriel. Pour choisir le cas, identifie la fonction du groupe nominal et le verbe ou la préposition.",
+  "Pour le Perfekt, mémorise le participe passé et l'auxiliaire. Les verbes de déplacement ou de changement d'état utilisent souvent sein.",
+  "Dans une subordonnée introduite par weil, dass ou wenn, place le verbe conjugué à la fin. Entraîne-toi à transformer des phrases."
+ ],
+ "physics": [
+  "Note les grandeurs connues, l'inconnue et les unités avant d'utiliser une formule. Convertis si nécessaire et vérifie la plausibilité du résultat.",
+  "Dans un schéma d'optique, distingue rayon incident, réfléchi et réfracté. Explique le phénomène à partir du changement de milieu.",
+  "Ne confonds pas énergie et puissance : l'énergie est une quantité transférée, la puissance mesure la rapidité du transfert. Note les unités."
+ ],
+ "biology": [
+  "Dans un schéma de cellule, nomme les structures et relie chacune à sa fonction. Utilise les termes scientifiques précis.",
+  "Distingue ADN, gène, allèle et caractère observable. Un modèle génétique simplifie la réalité et doit être interprété avec prudence.",
+  "Identifie producteurs, consommateurs et décomposeurs. Une modification d'une population peut affecter plusieurs maillons du réseau alimentaire."
+ ],
+ "histoire": [
+  "Identifie la nature, l'auteur, la date et le contexte d'un document. Distingue ce qu'il montre de l'interprétation que tu en fais.",
+  "Construis une chronologie et explique les liens de cause à conséquence. Évite de présenter un événement complexe comme ayant une seule cause.",
+  "Appuie chaque affirmation par un fait daté ou un élément du document. Distingue les faits établis des opinions des acteurs."
+ ],
+ "geo": [
+  "Lis le titre, la légende, l'échelle et la date d'une carte. Compare les espaces à partir de données.",
+  "Pour comparer des climats, observe températures et précipitations sur l'année. Distingue météo à court terme et climat à long terme.",
+  "Pour analyser un flux, repère départ, arrivée, acteurs et transports. Pense aux conséquences économiques et environnementales."
+ ],
+ "info": [
+  "Décompose un problème en étapes et écris un algorithme avant de coder. Teste les cas habituels et les cas limites.",
+  "Distingue routeur, switch et point d'accès Wi-Fi. Une adresse IP identifie une interface sur un réseau, contrairement à l'adresse MAC.",
+  "Utilise des mots de passe uniques et l'authentification à plusieurs facteurs. Vérifie les liens et pièces jointes avant de les ouvrir."
+ ]
+};
+for(const [subject,notes] of Object.entries(cycleLessonDeepening10)){
+ const list=(curriculum["10e"]||{})[subject]||[];
+ for(const chapter of list){
+  const term=Math.max(1,Math.min(3,Number(chapter.trimestre)||1));
+  const note=notes[term-1];
+  if(note&&!String(chapter.lesson||"").includes(note)) chapter.lesson=(chapter.lesson||"")+"\\n\\n<strong>Méthode et points de vigilance</strong>\\n"+note;
+ }
+}
+
 /* Chapitres de profil LS : la spécialité varie selon Latin, Langues vivantes ou Sciences. */
 const cycleProfilePlan={
 '10e':{

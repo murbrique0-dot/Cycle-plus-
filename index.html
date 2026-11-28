@@ -861,6 +861,124 @@ for(const [year,subjects] of Object.entries(cycleProfilePlan)){
   curriculum[year][subject].push(...lessons.filter(x=>!curriculum[year][subject].some(c=>c.t===x.t)));
  }
 }
+// Cours de latin 9e et approfondissement des profils LS et langues vivantes.
+if(!curriculum["9e"].la)curriculum["9e"].la=[];
+for(const lesson of [
+ {
+  "trimestre": 1,
+  "t": "Latin 9e · Monstrum 1 : bases et déclinaisons",
+  "lesson": "Apprendre le vocabulaire de la première liste avec le sens et la forme du mot. Repérer les terminaisons qui permettent d'identifier le cas et la fonction d'un nom. Le nominatif marque souvent le sujet et l'accusatif le complément direct.",
+  "q": "Quel cas marque généralement le sujet ?",
+  "a": [
+   "Nominatif",
+   "Accusatif",
+   "Ablatif"
+  ],
+  "c": 0,
+  "e": "Le nominatif indique généralement le sujet de la phrase.",
+  "q2": "Que faut-il apprendre avec chaque nom latin ?",
+  "a2": [
+   "Sa forme, son sens et son génitif ou modèle de déclinaison",
+   "Uniquement sa première lettre",
+   "Uniquement sa longueur"
+  ],
+  "c2": 0,
+  "e2": "Le modèle de déclinaison permet de retrouver les formes du nom."
+ },
+ {
+  "trimestre": 2,
+  "t": "Latin 9e · Monstrum 2 : verbes et phrase simple",
+  "lesson": "Mémoriser le vocabulaire de la deuxième liste et identifier les formes verbales par leur terminaison. Repérer personne, nombre et temps, puis relier le verbe à son sujet.",
+  "q": "Que permet souvent d'identifier la terminaison d'un verbe latin ?",
+  "a": [
+   "La personne et le nombre",
+   "La couleur du texte",
+   "Le genre du livre"
+  ],
+  "c": 0,
+  "e": "Les terminaisons verbales donnent notamment la personne et le nombre.",
+  "q2": "Quelle est la traduction habituelle de « amat » ?",
+  "a2": [
+   "Il ou elle aime",
+   "Ils aiment",
+   "Tu aimes"
+  ],
+  "c2": 0,
+  "e2": "Amat correspond à la troisième personne du singulier du présent."
+ },
+ {
+  "trimestre": 3,
+  "t": "Latin 9e · analyser et traduire",
+  "lesson": "Avant de traduire, repérer les verbes conjugués, les groupes nominaux et les terminaisons. Construire une phrase française correcte en respectant les fonctions plutôt que l'ordre des mots latin.",
+  "q": "Quelle démarche aide à traduire une phrase latine ?",
+  "a": [
+   "Repérer les verbes et les fonctions avant de rédiger",
+   "Traduire chaque mot sans analyser",
+   "Ignorer les terminaisons"
+  ],
+  "c": 0,
+  "e": "L'analyse des formes et des fonctions permet de comprendre la structure de la phrase.",
+  "q2": "Pourquoi l'ordre des mots latin ne suffit-il pas à identifier les fonctions ?",
+  "a2": [
+   "Les terminaisons jouent un rôle essentiel",
+   "Tous les mots ont le même ordre qu'en français",
+   "Les verbes n'ont pas de terminaison"
+  ],
+  "c2": 0,
+  "e2": "Les terminaisons indiquent souvent la fonction indépendamment de l'ordre des mots."
+ }
+]) if(!curriculum["9e"].la.some(c=>c.t===lesson.t)) curriculum["9e"].la.push({...lesson,level:"9e · progression indicative · Latin"});
+const cycleProfileLessonNotes={
+ "10e": {
+  "la": [
+   "Révise les déclinaisons avec des tableaux et apprends chaque mot avec sa forme de référence. Justifie le cas choisi en identifiant la fonction dans la phrase.",
+   "Pour analyser un verbe, relève personne, nombre, temps et voix. Appuie la traduction sur les terminaisons et le contexte.",
+   "Pour traduire, repère d'abord les verbes et les propositions, puis reconstruis une phrase française naturelle sans perdre le sens du texte."
+  ],
+  "dms": [
+   "Formule une question testable, une hypothèse et un protocole. Définis les variables et explique comment tu contrôles les conditions de l'expérience.",
+   "Présente les données dans un tableau ou un graphique lisible. Décris les tendances et précise les limites du modèle ou des mesures.",
+   "Construis une conclusion à partir des résultats, cite les données utiles et vérifie les unités et l'ordre de grandeur."
+  ],
+  "de_lv": [
+   "Comprends l'idée générale puis repère les informations précises. Pour répondre, appuie-toi sur des mots-clés du document plutôt que de deviner.",
+   "Prépare une présentation courte avec des phrases complètes, le vocabulaire du thème et des connecteurs simples. Vérifie l'ordre du verbe.",
+   "Pour écrire un texte, organise les idées, vérifie les cas et les formes verbales, puis relis les majuscules des noms allemands."
+  ],
+  "en_lv": [
+   "Repère le sujet, l'action et les informations clés d'un document. Utilise le contexte pour comprendre les mots inconnus.",
+   "À l'oral, organise ta réponse en introduction, deux idées et une conclusion. Utilise le vocabulaire étudié et des exemples.",
+   "Pour rédiger, varie les connecteurs, vérifie les temps et les auxiliaires, puis relis l'orthographe des mots fréquents."
+  ]
+ },
+ "11e": {
+  "la": [
+   "Consolide les déclinaisons et explique la fonction de chaque groupe nominal à partir de ses terminaisons et du contexte syntaxique.",
+   "Analyse les formes verbales et les propositions complexes avant de traduire. Distingue les informations grammaticales des choix de style.",
+   "Pour un texte suivi, justifie les choix lexicaux et syntaxiques et relie les références à leur contexte culturel et historique."
+  ],
+  "dms": [
+   "Définis une problématique, des hypothèses et un protocole reproductible. Identifie les variables, les contrôles et les sources d'incertitude.",
+   "Interprète les données en tenant compte de leur dispersion. Distingue corrélation et causalité et discute les limites de la modélisation.",
+   "Rédige une argumentation scientifique structurée : question, méthode, résultats, interprétation et limites de la conclusion."
+  ],
+  "de_lv": [
+   "Analyse les documents en distinguant informations explicites, implicites et point de vue. Justifie tes réponses avec des éléments précis.",
+   "Développe une prise de parole structurée, nuance ton opinion et réponds aux questions en réutilisant le vocabulaire du thème.",
+   "Rédige un texte cohérent avec des subordonnées et des connecteurs variés. Vérifie déclinaisons, ordre des mots et temps verbaux."
+  ],
+  "en_lv": [
+   "Distingue les idées principales, les détails et le point de vue de l'auteur. Déduis le sens des mots à partir du contexte.",
+   "Défends une opinion à l'oral en développant des arguments, des exemples et une conclusion claire. Reformule si nécessaire.",
+   "Structure un texte avec paragraphes et connecteurs. Vérifie cohérence des temps, accords, ponctuation et vocabulaire."
+  ]
+ }
+};
+for(const [year,subjects] of Object.entries(cycleProfileLessonNotes)) for(const [subject,notes] of Object.entries(subjects)){
+ const list=(curriculum[year]||{})[subject]||[];
+ for(const chapter of list){const term=Math.max(1,Math.min(3,Number(chapter.trimestre)||1)),note=notes[term-1];if(note&&!String(chapter.lesson||"").includes(note))chapter.lesson=(chapter.lesson||"")+"<p><strong>Méthode et points de vigilance</strong></p><p>"+note+"</p>";}
+}
+
 /* Ajoute les questions secondaires de chaque chapitre aux mini-tests, exercices et évaluations. */
 const cycleAllQuestionsBeforeAnnual=allQuestions;
 allQuestions=function(){

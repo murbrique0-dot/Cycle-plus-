@@ -865,6 +865,552 @@ allQuestions=function(){
 };
 
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
+
+
+// Banque complémentaire 10e : questions réparties sur les trois trimestres.
+const cycleAddedQuestions10b={
+ "maths": [
+  {
+   "trimestre": 1,
+   "t": "Équations",
+   "q": "Résous : 3x − 5 = 16.",
+   "a": [
+    "x = 7",
+    "x = 11/3",
+    "x = 3",
+    "x = 21"
+   ],
+   "c": 0,
+   "e": "3x = 21, donc x = 7."
+  },
+  {
+   "trimestre": 2,
+   "t": "Fonctions",
+   "q": "La droite y = 4x − 3 passe par quel point lorsque x = 2 ?",
+   "a": [
+    "(2 ; 5)",
+    "(2 ; 8)",
+    "(2 ; −1)",
+    "(2 ; 11)"
+   ],
+   "c": 0,
+   "e": "4 × 2 − 3 = 5."
+  },
+  {
+   "trimestre": 3,
+   "t": "Géométrie",
+   "q": "Un triangle rectangle a pour côtés de l'angle droit 6 cm et 8 cm. Quelle est l'hypoténuse ?",
+   "a": [
+    "10 cm",
+    "14 cm",
+    "7 cm",
+    "48 cm"
+   ],
+   "c": 0,
+   "e": "Par Pythagore : √(6² + 8²) = √100 = 10 cm."
+  }
+ ],
+ "fr": [
+  {
+   "trimestre": 1,
+   "t": "Classes grammaticales",
+   "q": "Dans « Elle leur parle », quelle est la nature de « leur » ?",
+   "a": [
+    "Pronom personnel",
+    "Déterminant possessif",
+    "Adjectif",
+    "Conjonction"
+   ],
+   "c": 0,
+   "e": "« Leur » remplace les personnes auxquelles elle parle : c'est un pronom personnel."
+  },
+  {
+   "trimestre": 2,
+   "t": "Subordination",
+   "q": "Dans « Je pense que tu as raison », quelle est la fonction de « que tu as raison » ?",
+   "a": [
+    "Complément d'objet direct de « pense »",
+    "Sujet de « pense »",
+    "Complément circonstanciel de temps",
+    "Attribut du sujet"
+   ],
+   "c": 0,
+   "e": "On pense quelque chose : la proposition complète le verbe « pense »."
+  },
+  {
+   "trimestre": 3,
+   "t": "Argumentation",
+   "q": "Quel connecteur introduit le plus clairement une opposition ?",
+   "a": [
+    "Cependant",
+    "Donc",
+    "En effet",
+    "Premièrement"
+   ],
+   "c": 0,
+   "e": "« Cependant » marque une opposition ou une concession."
+  }
+ ],
+ "en": [
+  {
+   "trimestre": 1,
+   "t": "Past simple",
+   "q": "Choose the correct sentence.",
+   "a": [
+    "She went to school yesterday.",
+    "She go to school yesterday.",
+    "She gone to school yesterday.",
+    "She goes to school yesterday."
+   ],
+   "c": 0,
+   "e": "Le prétérit de « go » est « went »."
+  },
+  {
+   "trimestre": 2,
+   "t": "Present perfect",
+   "q": "Complete: I ___ never ___ sushi.",
+   "a": [
+    "have / eaten",
+    "has / ate",
+    "did / eaten",
+    "have / eat"
+   ],
+   "c": 0,
+   "e": "Avec « I », on utilise have + participe passé : eaten."
+  },
+  {
+   "trimestre": 3,
+   "t": "Conditionals",
+   "q": "Complete: If it rains, we ___ at home.",
+   "a": [
+    "will stay",
+    "stayed",
+    "would stayed",
+    "stays"
+   ],
+   "c": 0,
+   "e": "Dans le premier conditionnel : If + présent, will + base verbale."
+  }
+ ],
+ "de": [
+  {
+   "trimestre": 1,
+   "t": "Perfekt",
+   "q": "Welche Form ist richtig? « Wir ___ nach Bern gefahren. »",
+   "a": [
+    "sind",
+    "haben",
+    "werden",
+    "seid"
+   ],
+   "c": 0,
+   "e": "« fahren » forme généralement le Perfekt avec sein : wir sind gefahren."
+  },
+  {
+   "trimestre": 2,
+   "t": "Cas",
+   "q": "Welcher Artikel passt? « Ich helfe ___ Bruder. »",
+   "a": [
+    "dem",
+    "den",
+    "der",
+    "des"
+   ],
+   "c": 0,
+   "e": "« helfen » demande le datif ; « der Bruder » devient « dem Bruder »."
+  },
+  {
+   "trimestre": 3,
+   "t": "Subordonnées",
+   "q": "Complète : « Ich bleibe zu Hause, weil ich krank ___. »",
+   "a": [
+    "bin",
+    "ist",
+    "bist",
+    "sein"
+   ],
+   "c": 0,
+   "e": "Avec « ich », on utilise « bin » ; le verbe conjugué se place à la fin de la subordonnée."
+  }
+ ],
+ "physics": [
+  {
+   "trimestre": 1,
+   "t": "Électricité",
+   "q": "Un appareil fonctionne sous 12 V et reçoit un courant de 2 A. Quelle puissance électrique consomme-t-il ?",
+   "a": [
+    "24 W",
+    "6 W",
+    "14 W",
+    "10 W"
+   ],
+   "c": 0,
+   "e": "P = U × I = 12 × 2 = 24 W."
+  },
+  {
+   "trimestre": 2,
+   "t": "Optique",
+   "q": "Lorsqu'un rayon lumineux passe de l'air à l'eau, que peut-il se produire ?",
+   "a": [
+    "Une réfraction",
+    "Une combustion",
+    "Une fusion",
+    "Une aimantation"
+   ],
+   "c": 0,
+   "e": "La lumière change de direction en changeant de milieu : c'est la réfraction."
+  },
+  {
+   "trimestre": 3,
+   "t": "Énergie",
+   "q": "Quelle unité mesure une énergie ?",
+   "a": [
+    "Le joule",
+    "Le watt",
+    "L'ampère",
+    "Le volt"
+   ],
+   "c": 0,
+   "e": "L'énergie se mesure en joules (J) ; le watt mesure une puissance."
+  }
+ ],
+ "biology": [
+  {
+   "trimestre": 1,
+   "t": "Cellule",
+   "q": "Quel organite contient l'essentiel de l'information génétique dans une cellule animale ?",
+   "a": [
+    "Le noyau",
+    "La membrane",
+    "Le cytoplasme",
+    "Le ribosome"
+   ],
+   "c": 0,
+   "e": "Le noyau contient la majeure partie de l'ADN de la cellule."
+  },
+  {
+   "trimestre": 2,
+   "t": "Génétique",
+   "q": "Un gène est principalement…",
+   "a": [
+    "Une portion d'ADN portant une information",
+    "Une cellule entière",
+    "Un organe",
+    "Une protéine complète"
+   ],
+   "c": 0,
+   "e": "Un gène est une séquence d'ADN qui contribue à déterminer un caractère ou à produire un ARN fonctionnel."
+  },
+  {
+   "trimestre": 3,
+   "t": "Écosystèmes",
+   "q": "Dans une chaîne alimentaire, un producteur est généralement…",
+   "a": [
+    "Une plante verte",
+    "Un renard",
+    "Un champignon décomposeur",
+    "Un herbivore"
+   ],
+   "c": 0,
+   "e": "Les plantes produisent leur matière organique grâce à la photosynthèse."
+  }
+ ],
+ "histoire": [
+  {
+   "trimestre": 1,
+   "t": "Révolutions",
+   "q": "Quel événement est associé au début de la Révolution française ?",
+   "a": [
+    "La prise de la Bastille en 1789",
+    "La chute du mur de Berlin",
+    "La bataille de Waterloo",
+    "La création de l'ONU"
+   ],
+   "c": 0,
+   "e": "La prise de la Bastille a lieu le 14 juillet 1789."
+  },
+  {
+   "trimestre": 2,
+   "t": "Industrialisation",
+   "q": "Quelle énergie a joué un rôle majeur dans la première industrialisation ?",
+   "a": [
+    "La vapeur",
+    "L'énergie nucléaire",
+    "L'énergie solaire photovoltaïque",
+    "L'hydrogène vert"
+   ],
+   "c": 0,
+   "e": "La machine à vapeur a fortement soutenu le développement industriel."
+  },
+  {
+   "trimestre": 3,
+   "t": "XXe siècle",
+   "q": "En quelle année la Première Guerre mondiale s'est-elle terminée ?",
+   "a": [
+    "1918",
+    "1914",
+    "1939",
+    "1945"
+   ],
+   "c": 0,
+   "e": "L'armistice est signé le 11 novembre 1918."
+  }
+ ],
+ "geo": [
+  {
+   "trimestre": 1,
+   "t": "Population",
+   "q": "La densité de population correspond au nombre d'habitants…",
+   "a": [
+    "Par unité de surface",
+    "Dans un pays voisin",
+    "Nés en une année",
+    "Par famille"
+   ],
+   "c": 0,
+   "e": "On exprime généralement la densité en habitants par km²."
+  },
+  {
+   "trimestre": 2,
+   "t": "Climats",
+   "q": "Quel facteur explique notamment la baisse des températures avec l'altitude ?",
+   "a": [
+    "L'air se refroidit généralement quand l'altitude augmente",
+    "La longitude augmente",
+    "La mer disparaît",
+    "La durée du jour devient toujours nulle"
+   ],
+   "c": 0,
+   "e": "La température diminue généralement avec l'altitude dans la troposphère."
+  },
+  {
+   "trimestre": 3,
+   "t": "Mondialisation",
+   "q": "Une exportation est…",
+   "a": [
+    "La vente de biens ou services à l'étranger",
+    "L'achat de produits étrangers",
+    "Un déplacement à l'intérieur d'une ville",
+    "Une taxe locale"
+   ],
+   "c": 0,
+   "e": "Exporter signifie vendre vers un autre pays."
+  }
+ ],
+ "info": [
+  {
+   "trimestre": 1,
+   "t": "Données",
+   "q": "Quelle structure permet de stocker plusieurs valeurs dans un ordre donné en programmation ?",
+   "a": [
+    "Une liste ou un tableau",
+    "Un commentaire",
+    "Une couleur",
+    "Un fichier image uniquement"
+   ],
+   "c": 0,
+   "e": "Une liste ou un tableau regroupe plusieurs valeurs accessibles par position."
+  },
+  {
+   "trimestre": 2,
+   "t": "Réseaux",
+   "q": "Quel équipement relie plusieurs appareils d'un réseau local Ethernet ?",
+   "a": [
+    "Un commutateur (switch)",
+    "Un écran",
+    "Une imprimante seule",
+    "Un clavier"
+   ],
+   "c": 0,
+   "e": "Un switch relie plusieurs appareils dans un réseau local."
+  },
+  {
+   "trimestre": 3,
+   "t": "Sécurité",
+   "q": "Quel est le meilleur réflexe face à un lien inattendu demandant ton mot de passe ?",
+   "a": [
+    "Ne pas saisir le mot de passe et vérifier l'expéditeur et l'adresse du site",
+    "Cliquer rapidement",
+    "Transmettre le lien à tout le monde",
+    "Désactiver les mises à jour"
+   ],
+   "c": 0,
+   "e": "Il faut vérifier l'origine du message et le domaine avant toute connexion."
+  }
+ ],
+ "dms": [
+  {
+   "trimestre": 1,
+   "t": "Variables et hypothèses",
+   "q": "Dans une expérience, une variable témoin sert principalement à…",
+   "a": [
+    "Fournir une référence de comparaison",
+    "Changer toutes les conditions",
+    "Remplacer les résultats",
+    "Éviter de noter les mesures"
+   ],
+   "c": 0,
+   "e": "Le témoin permet de comparer les résultats avec une situation de référence."
+  },
+  {
+   "trimestre": 2,
+   "t": "Incertitudes",
+   "q": "Pourquoi répéter plusieurs fois une mesure ?",
+   "a": [
+    "Pour réduire l'effet des variations aléatoires",
+    "Pour garantir la valeur souhaitée",
+    "Pour supprimer les unités",
+    "Pour modifier l'hypothèse"
+   ],
+   "c": 0,
+   "e": "Répéter les mesures aide à repérer les variations et à estimer une valeur représentative."
+  },
+  {
+   "trimestre": 3,
+   "t": "Argumentation scientifique",
+   "q": "Quelle conclusion est la plus scientifique ?",
+   "a": [
+    "Une conclusion limitée aux résultats observés",
+    "Une certitude sans mesure",
+    "Une opinion sans justification",
+    "Une affirmation qui ignore les résultats"
+   ],
+   "c": 0,
+   "e": "Une conclusion doit s'appuyer sur les données et reconnaître leurs limites."
+  }
+ ],
+ "arts": [
+  {
+   "trimestre": 1,
+   "t": "Composition",
+   "q": "Dans une image, le cadrage désigne…",
+   "a": [
+    "La manière de délimiter ce qui apparaît dans l'image",
+    "Le mélange des sons",
+    "La taille du papier uniquement",
+    "La signature de l'artiste"
+   ],
+   "c": 0,
+   "e": "Le cadrage détermine la portion de scène représentée."
+  },
+  {
+   "trimestre": 2,
+   "t": "Couleurs",
+   "q": "Quelles couleurs obtient-on en mélangeant du bleu et du jaune en peinture ?",
+   "a": [
+    "Du vert",
+    "Du violet",
+    "De l'orange",
+    "Du rouge"
+   ],
+   "c": 0,
+   "e": "En mélange soustractif de pigments, bleu et jaune donnent généralement du vert."
+  },
+  {
+   "trimestre": 3,
+   "t": "Analyse d'œuvre",
+   "q": "Quel élément relève le plus directement de la composition ?",
+   "a": [
+    "La disposition des formes dans l'espace",
+    "La date de naissance du spectateur",
+    "Le prix du billet",
+    "La météo du jour"
+   ],
+   "c": 0,
+   "e": "La composition concerne l'organisation visuelle des éléments."
+  }
+ ],
+ "music": [
+  {
+   "trimestre": 1,
+   "t": "Rythme",
+   "q": "Quel terme désigne la vitesse d'exécution d'une musique ?",
+   "a": [
+    "Le tempo",
+    "Le timbre",
+    "La nuance",
+    "La tonalité"
+   ],
+   "c": 0,
+   "e": "Le tempo indique la vitesse de la pulsation."
+  },
+  {
+   "trimestre": 2,
+   "t": "Timbre",
+   "q": "Le timbre permet principalement de distinguer…",
+   "a": [
+    "Deux sources sonores jouant la même note",
+    "Deux durées identiques",
+    "Deux silences",
+    "Deux partitions vierges"
+   ],
+   "c": 0,
+   "e": "Le timbre caractérise la couleur sonore d'une voix ou d'un instrument."
+  },
+  {
+   "trimestre": 3,
+   "t": "Forme musicale",
+   "q": "Dans une forme ABA, que se passe-t-il dans la partie C ?",
+   "a": [
+    "Il n'y a pas de partie C dans cette forme",
+    "Elle remplace toujours A",
+    "Elle est obligatoirement un silence",
+    "Elle est jouée avant A"
+   ],
+   "c": 0,
+   "e": "La forme ABA comporte trois sections : A, B, puis le retour de A."
+  }
+ ],
+ "pe": [
+  {
+   "trimestre": 1,
+   "t": "Entraînement",
+   "q": "Quel est l'intérêt principal d'un échauffement progressif ?",
+   "a": [
+    "Préparer le corps à l'effort",
+    "Fatiguer les muscles avant l'activité",
+    "Remplacer l'hydratation",
+    "Éviter toute récupération"
+   ],
+   "c": 0,
+   "e": "L'échauffement prépare progressivement les systèmes musculaire et cardiovasculaire."
+  },
+  {
+   "trimestre": 2,
+   "t": "Endurance",
+   "q": "Quelle capacité est principalement sollicitée lors d'un effort modéré prolongé ?",
+   "a": [
+    "L'endurance aérobie",
+    "La souplesse uniquement",
+    "La vitesse de réaction uniquement",
+    "L'équilibre statique uniquement"
+   ],
+   "c": 0,
+   "e": "L'endurance aérobie permet de maintenir un effort dans la durée."
+  },
+  {
+   "trimestre": 3,
+   "t": "Récupération",
+   "q": "Quel comportement favorise une récupération adaptée après le sport ?",
+   "a": [
+    "Boire de l'eau et respecter le repos",
+    "Enchaîner immédiatement un effort maximal",
+    "Ignorer la fatigue",
+    "Éviter de dormir"
+   ],
+   "c": 0,
+   "e": "Hydratation, alimentation équilibrée et repos contribuent à la récupération."
+  }
+ ]
+};
+const cycleAllQuestions10b=allQuestions;
+allQuestions=function(){
+ const base=cycleAllQuestions10b();
+ const subject=$("#subject").value,term=$("#term").value;
+ const additions=(cycleAddedQuestions10b[subject]||[]).filter(q=>String(q.trimestre)===String(term));
+ const seen=new Set(base.map(q=>q.q));
+ return [...base,...additions.filter(q=>q.q&&!seen.has(q.q))].map((q,i)=>({...q,questionIndex:i,topic:q.t||"Autres"}));
+};
 render();
 
 </script></body></html>const cycleQuestionExpansion={

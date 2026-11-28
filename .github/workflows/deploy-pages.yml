@@ -29,6 +29,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+          name: cycle-plus-pages
       - name: Publish website
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: cycle-plus-pages

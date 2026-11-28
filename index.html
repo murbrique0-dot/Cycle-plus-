@@ -2924,4 +2924,710 @@ allQuestions=function(){
 const miniNav=document.createElement("button");miniNav.className="navbtn";miniNav.dataset.page="mini";miniNav.textContent="✍️ Mini-tests";document.querySelector(".sidebar").insertBefore(miniNav,document.querySelector('[data-page="evaluation"]'));miniNav.addEventListener("click",()=>go("mini"));
 render();
 
+
+// Banque complémentaire : une question supplémentaire par matière et par trimestre en 9e et 11e.
+const cycleExtraQuestions9and11={
+ "9e": {
+  "maths": [
+   {
+    "trimestre": 1,
+    "t": "Relatifs",
+    "q": "Calcule : −12 + 7 − (−3).",
+    "a": [
+     "−2",
+     "−8",
+     "−22",
+     "2"
+    ],
+    "c": 0,
+    "e": "−12 + 7 = −5, puis −5 + 3 = −2."
+   },
+   {
+    "trimestre": 2,
+    "t": "Pourcentages",
+    "q": "Un article coûte 80 CHF. Il bénéficie d'une réduction de 25 %. Quel est son nouveau prix ?",
+    "a": [
+     "60 CHF",
+     "55 CHF",
+     "65 CHF",
+     "75 CHF"
+    ],
+    "c": 0,
+    "e": "25 % de 80 = 20 ; 80 − 20 = 60 CHF."
+   },
+   {
+    "trimestre": 3,
+    "t": "Équations",
+    "q": "Résous : 4x − 9 = 15.",
+    "a": [
+     "x = 6",
+     "x = 4",
+     "x = 9",
+     "x = 15"
+    ],
+    "c": 0,
+    "e": "4x = 24, donc x = 6."
+   }
+  ],
+  "fr": [
+   {
+    "trimestre": 1,
+    "t": "Grammaire",
+    "q": "Dans « Les élèves attentifs écoutent », quelle est la fonction de « attentifs » ?",
+    "a": [
+     "Épithète du nom « élèves »",
+     "Sujet",
+     "COD du verbe"
+    ],
+    "c": 0,
+    "e": "« Attentifs » qualifie directement le nom « élèves » : c'est un adjectif épithète."
+   },
+   {
+    "trimestre": 2,
+    "t": "Conjugaison",
+    "q": "Dans un récit au passé, quel temps sert souvent à décrire le décor ou une habitude ?",
+    "a": [
+     "Imparfait",
+     "Passé simple",
+     "Plus-que-parfait uniquement"
+    ],
+    "c": 0,
+    "e": "L'imparfait exprime notamment la description et les habitudes passées."
+   },
+   {
+    "trimestre": 3,
+    "t": "Argumentation",
+    "q": "Quel élément rend un argument plus convaincant ?",
+    "a": [
+     "Un exemple précis qui l'illustre",
+     "Une répétition sans explication",
+     "Une affirmation sans justification"
+    ],
+    "c": 0,
+    "e": "Un exemple concret permet d'appuyer et d'éclairer l'argument."
+   }
+  ],
+  "en": [
+   {
+    "trimestre": 1,
+    "t": "Present simple",
+    "q": "Choose the correct sentence.",
+    "a": [
+     "She plays tennis every Saturday.",
+     "She play tennis every Saturday.",
+     "She playing tennis every Saturday."
+    ],
+    "c": 0,
+    "e": "À la troisième personne du singulier, le verbe prend généralement -s au present simple."
+   },
+   {
+    "trimestre": 2,
+    "t": "Past simple",
+    "q": "Choose the correct question.",
+    "a": [
+     "Did you see the film?",
+     "Did you saw the film?",
+     "Do you saw the film?"
+    ],
+    "c": 0,
+    "e": "Après did, on utilise la base verbale : see."
+   },
+   {
+    "trimestre": 3,
+    "t": "Future",
+    "q": "Which sentence expresses a prediction based on an opinion ?",
+    "a": [
+     "I think it will rain tomorrow.",
+     "I visited London yesterday.",
+     "I am eating now."
+    ],
+    "c": 0,
+    "e": "Will sert notamment à exprimer une prédiction ou une opinion sur le futur."
+   }
+  ],
+  "de": [
+   {
+    "trimestre": 1,
+    "t": "Articles",
+    "q": "Complète : ___ Sonne scheint.",
+    "a": [
+     "Die",
+     "Der",
+     "Das"
+    ],
+    "c": 0,
+    "e": "« Sonne » est féminin : die Sonne."
+   },
+   {
+    "trimestre": 2,
+    "t": "Perfekt",
+    "q": "Choisis la forme correcte : « Wir ___ nach Bern gefahren. »",
+    "a": [
+     "sind",
+     "haben",
+     "seid"
+    ],
+    "c": 0,
+    "e": "Le verbe fahren exprimant ici un déplacement se construit avec sein au Perfekt."
+   },
+   {
+    "trimestre": 3,
+    "t": "Subordonnée",
+    "q": "Complète : « Ich bleibe zu Hause, weil ich krank ___. »",
+    "a": [
+     "bin",
+     "ist",
+     "bist"
+    ],
+    "c": 0,
+    "e": "Après weil, le verbe conjugué va à la fin ; avec ich, on écrit bin."
+   }
+  ],
+  "physics": [
+   {
+    "trimestre": 1,
+    "t": "Mesures",
+    "q": "Quelle unité mesure une durée ?",
+    "a": [
+     "La seconde",
+     "Le newton",
+     "Le volt"
+    ],
+    "c": 0,
+    "e": "La seconde (s) est l'unité SI du temps."
+   },
+   {
+    "trimestre": 2,
+    "t": "Optique",
+    "q": "Lorsqu'un rayon lumineux rebondit sur un miroir, il s'agit de…",
+    "a": [
+     "Réflexion",
+     "Réfraction",
+     "Dispersion uniquement"
+    ],
+    "c": 0,
+    "e": "La réflexion correspond au renvoi de la lumière par une surface."
+   },
+   {
+    "trimestre": 3,
+    "t": "Électricité",
+    "q": "Dans un circuit en série, que se passe-t-il si une lampe est retirée ?",
+    "a": [
+     "Le circuit est ouvert et le courant ne circule plus",
+     "Les autres lampes brillent toujours normalement",
+     "La tension devient infinie"
+    ],
+    "c": 0,
+    "e": "Retirer une lampe ouvre le circuit en série et interrompt le courant."
+   }
+  ],
+  "biology": [
+   {
+    "trimestre": 1,
+    "t": "Cellule",
+    "q": "Quelle structure contrôle les échanges entre la cellule et son milieu ?",
+    "a": [
+     "La membrane cellulaire",
+     "Le noyau uniquement",
+     "La paroi du microscope"
+    ],
+    "c": 0,
+    "e": "La membrane cellulaire régule les échanges avec le milieu extérieur."
+   },
+   {
+    "trimestre": 2,
+    "t": "Organisme",
+    "q": "Quel système transporte le sang dans le corps humain ?",
+    "a": [
+     "Le système circulatoire",
+     "Le système digestif",
+     "Le système nerveux uniquement"
+    ],
+    "c": 0,
+    "e": "Le cœur et les vaisseaux assurent la circulation du sang."
+   },
+   {
+    "trimestre": 3,
+    "t": "Écosystème",
+    "q": "Quel rôle jouent les décomposeurs ?",
+    "a": [
+     "Ils transforment la matière organique morte",
+     "Ils fabriquent la lumière",
+     "Ils empêchent toute décomposition"
+    ],
+    "c": 0,
+    "e": "Les décomposeurs recyclent la matière organique et restituent des éléments au milieu."
+   }
+  ],
+  "histoire": [
+   {
+    "trimestre": 1,
+    "t": "Sources",
+    "q": "Pourquoi faut-il identifier l'auteur d'un document historique ?",
+    "a": [
+     "Pour comprendre son point de vue et son contexte",
+     "Pour connaître sa couleur préférée",
+     "Pour éviter de lire le document"
+    ],
+    "c": 0,
+    "e": "L'auteur et le contexte aident à interpréter la source et ses limites."
+   },
+   {
+    "trimestre": 2,
+    "t": "Chronologie",
+    "q": "Quel événement a lieu en premier ?",
+    "a": [
+     "La Révolution française (1789)",
+     "La Première Guerre mondiale (1914)",
+     "La Seconde Guerre mondiale (1939)"
+    ],
+    "c": 0,
+    "e": "1789 précède 1914 et 1939."
+   },
+   {
+    "trimestre": 3,
+    "t": "Industrialisation",
+    "q": "Quelle transformation caractérise l'industrialisation ?",
+    "a": [
+     "Le développement des usines et de la production mécanisée",
+     "La disparition de toutes les villes",
+     "Le retour général à l'économie exclusivement agricole"
+    ],
+    "c": 0,
+    "e": "L'industrialisation développe les machines, les usines et la production en série."
+   }
+  ],
+  "geo": [
+   {
+    "trimestre": 1,
+    "t": "Cartographie",
+    "q": "À quoi sert l'échelle d'une carte ?",
+    "a": [
+     "À relier une distance sur la carte à une distance réelle",
+     "À indiquer la température",
+     "À donner le nombre d'habitants"
+    ],
+    "c": 0,
+    "e": "L'échelle exprime le rapport entre les distances représentées et les distances réelles."
+   },
+   {
+    "trimestre": 2,
+    "t": "Population",
+    "q": "Comment calcule-t-on une densité de population ?",
+    "a": [
+     "Population divisée par la superficie",
+     "Superficie divisée par la population",
+     "Population multipliée par la température"
+    ],
+    "c": 0,
+    "e": "La densité correspond au nombre d'habitants par unité de surface."
+   },
+   {
+    "trimestre": 3,
+    "t": "Développement durable",
+    "q": "Quel exemple correspond à une mobilité plus durable ?",
+    "a": [
+     "Utiliser les transports publics quand ils sont adaptés",
+     "Multiplier les trajets individuels en voiture",
+     "Laisser tourner un moteur à l'arrêt"
+    ],
+    "c": 0,
+    "e": "Les transports publics peuvent réduire l'énergie consommée et les émissions par personne."
+   }
+  ],
+  "info": [
+   {
+    "trimestre": 1,
+    "t": "Algorithmes",
+    "q": "Dans un algorithme, à quoi sert une condition ?",
+    "a": [
+     "À choisir une action selon qu'un test est vrai ou faux",
+     "À répéter toujours la même action sans limite",
+     "À stocker uniquement une image"
+    ],
+    "c": 0,
+    "e": "Une condition permet d'exécuter des instructions selon un résultat logique."
+   },
+   {
+    "trimestre": 2,
+    "t": "Réseaux",
+    "q": "Quel service traduit généralement un nom de domaine en adresse IP ?",
+    "a": [
+     "DNS",
+     "DHCP",
+     "USB"
+    ],
+    "c": 0,
+    "e": "Le DNS associe les noms de domaine aux adresses IP."
+   },
+   {
+    "trimestre": 3,
+    "t": "Sécurité numérique",
+    "q": "Pourquoi activer l'authentification à deux facteurs ?",
+    "a": [
+     "Pour ajouter une vérification en plus du mot de passe",
+     "Pour partager son mot de passe",
+     "Pour désactiver les mises à jour"
+    ],
+    "c": 0,
+    "e": "Un second facteur rend l'accès au compte plus difficile en cas de mot de passe compromis."
+   }
+  ]
+ },
+ "11e": {
+  "maths": [
+   {
+    "trimestre": 1,
+    "t": "Équations",
+    "q": "Résous : 5( x − 2 ) = 20.",
+    "a": [
+     "x = 6",
+     "x = 4",
+     "x = 8",
+     "x = 2"
+    ],
+    "c": 0,
+    "e": "On divise par 5 : x − 2 = 4, donc x = 6."
+   },
+   {
+    "trimestre": 2,
+    "t": "Fonctions",
+    "q": "Pour f(x) = 3x − 4, quelle est l'image de −2 ?",
+    "a": [
+     "−10",
+     "2",
+     "−2",
+     "10"
+    ],
+    "c": 0,
+    "e": "f(−2) = 3 × (−2) − 4 = −10."
+   },
+   {
+    "trimestre": 3,
+    "t": "Statistiques",
+    "q": "Quelle est la médiane de 2, 4, 7, 9, 12, 15 ?",
+    "a": [
+     "8",
+     "7",
+     "9",
+     "7,5"
+    ],
+    "c": 0,
+    "e": "Avec six valeurs, la médiane est la moyenne des deux valeurs centrales : (7 + 9) ÷ 2 = 8."
+   }
+  ],
+  "fr": [
+   {
+    "trimestre": 1,
+    "t": "Propositions",
+    "q": "Dans « Je pense que tu as raison », quelle est la nature de « que tu as raison » ?",
+    "a": [
+     "Proposition subordonnée conjonctive complétive",
+     "Proposition principale",
+     "Proposition relative"
+    ],
+    "c": 0,
+    "e": "La subordonnée introduite par que complète le verbe « pense »."
+   },
+   {
+    "trimestre": 2,
+    "t": "Analyse de texte",
+    "q": "Quel élément constitue une preuve pertinente dans un commentaire ?",
+    "a": [
+     "Une citation courte analysée et reliée à une idée",
+     "Un résumé sans lien avec la question",
+     "Une impression sans exemple"
+    ],
+    "c": 0,
+    "e": "La citation doit être expliquée et reliée à l'interprétation."
+   },
+   {
+    "trimestre": 3,
+    "t": "Argumentation",
+    "q": "À quoi sert une concession dans un texte argumentatif ?",
+    "a": [
+     "À reconnaître un point de vue opposé avant de nuancer sa thèse",
+     "À supprimer la thèse",
+     "À remplacer tous les arguments par une question"
+    ],
+    "c": 0,
+    "e": "La concession montre qu'on prend en compte une objection avant d'y répondre."
+   }
+  ],
+  "en": [
+   {
+    "trimestre": 1,
+    "t": "Tenses",
+    "q": "Choose the correct form: « She ___ here since 2022. »",
+    "a": [
+     "has lived",
+     "lived",
+     "is live"
+    ],
+    "c": 0,
+    "e": "Since indique une situation commencée dans le passé et encore vraie : present perfect."
+   },
+   {
+    "trimestre": 2,
+    "t": "Passive voice",
+    "q": "Choose the correct passive sentence: « They built the bridge in 1990. »",
+    "a": [
+     "The bridge was built in 1990.",
+     "The bridge is build in 1990.",
+     "The bridge built in 1990."
+    ],
+    "c": 0,
+    "e": "Le passif au past simple se forme avec was/were + participe passé."
+   },
+   {
+    "trimestre": 3,
+    "t": "Argumentation",
+    "q": "Which connector introduces a contrast ?",
+    "a": [
+     "However",
+     "Therefore",
+     "For example"
+    ],
+    "c": 0,
+    "e": "However introduit une opposition ou une nuance."
+   }
+  ],
+  "de": [
+   {
+    "trimestre": 1,
+    "t": "Déclinaisons",
+    "q": "Complète : « Ich helfe ___ Mann. »",
+    "a": [
+     "dem",
+     "den",
+     "der"
+    ],
+    "c": 0,
+    "e": "Helfen se construit avec le datif ; der Mann devient dem Mann."
+   },
+   {
+    "trimestre": 2,
+    "t": "Ordre des mots",
+    "q": "Complète : « Ich lerne Deutsch, obwohl ich müde ___. »",
+    "a": [
+     "bin",
+     "ist",
+     "bist"
+    ],
+    "c": 0,
+    "e": "Après obwohl, le verbe conjugué est placé à la fin ; avec ich, bin."
+   },
+   {
+    "trimestre": 3,
+    "t": "Expression écrite",
+    "q": "Quel connecteur allemand signifie « pourtant / cependant » ?",
+    "a": [
+     "Trotzdem",
+     "Deshalb",
+     "Zuerst"
+    ],
+    "c": 0,
+    "e": "Trotzdem introduit une opposition ou un résultat inattendu."
+   }
+  ],
+  "physics": [
+   {
+    "trimestre": 1,
+    "t": "Grandeurs physiques",
+    "q": "Quelle unité correspond à une puissance ?",
+    "a": [
+     "Watt",
+     "Joule",
+     "Coulomb"
+    ],
+    "c": 0,
+    "e": "Le watt (W) mesure la puissance ; le joule mesure l'énergie."
+   },
+   {
+    "trimestre": 2,
+    "t": "Électricité",
+    "q": "Quelle relation relie tension U, résistance R et intensité I dans un conducteur ohmique ?",
+    "a": [
+     "U = R × I",
+     "U = R + I",
+     "U = I ÷ R"
+    ],
+    "c": 0,
+    "e": "La loi d'Ohm s'écrit U = R × I."
+   },
+   {
+    "trimestre": 3,
+    "t": "Énergie",
+    "q": "Un appareil de 100 W fonctionne pendant 2 h. Quelle énergie consomme-t-il ?",
+    "a": [
+     "200 Wh",
+     "50 Wh",
+     "102 Wh"
+    ],
+    "c": 0,
+    "e": "Énergie = puissance × durée = 100 W × 2 h = 200 Wh."
+   }
+  ],
+  "biology": [
+   {
+    "trimestre": 1,
+    "t": "Génétique",
+    "q": "Où se trouve principalement l'ADN dans une cellule humaine ?",
+    "a": [
+     "Dans le noyau",
+     "Dans la membrane extérieure",
+     "Dans le milieu extracellulaire uniquement"
+    ],
+    "c": 0,
+    "e": "La majeure partie de l'ADN d'une cellule humaine se trouve dans le noyau."
+   },
+   {
+    "trimestre": 2,
+    "t": "Hérédité",
+    "q": "Un individu possède deux versions d'un même gène. Comment les appelle-t-on ?",
+    "a": [
+     "Allèles",
+     "Organes",
+     "Cellules"
+    ],
+    "c": 0,
+    "e": "Les allèles sont différentes versions d'un même gène."
+   },
+   {
+    "trimestre": 3,
+    "t": "Écologie",
+    "q": "Que représente un réseau trophique ?",
+    "a": [
+     "L'ensemble des relations alimentaires d'un écosystème",
+     "Une carte des routes",
+     "Une liste de climats"
+    ],
+    "c": 0,
+    "e": "Un réseau trophique relie plusieurs chaînes alimentaires."
+   }
+  ],
+  "histoire": [
+   {
+    "trimestre": 1,
+    "t": "Analyse historique",
+    "q": "Pourquoi confronter plusieurs sources sur un événement ?",
+    "a": [
+     "Pour comparer les points de vue et mieux évaluer les faits",
+     "Pour choisir celle qui est la plus longue",
+     "Pour éviter le contexte"
+    ],
+    "c": 0,
+    "e": "La confrontation des sources permet de repérer accords, divergences et limites."
+   },
+   {
+    "trimestre": 2,
+    "t": "Causes et conséquences",
+    "q": "Quelle distinction faut-il faire dans une explication historique ?",
+    "a": [
+     "Entre causes, déroulement et conséquences",
+     "Entre opinion et couleur",
+     "Entre titre et pagination uniquement"
+    ],
+    "c": 0,
+    "e": "Une explication claire distingue les facteurs, les événements et leurs effets."
+   },
+   {
+    "trimestre": 3,
+    "t": "Méthode historique",
+    "q": "Quel élément renforce une réponse historique ?",
+    "a": [
+     "Des faits contextualisés et des repères chronologiques",
+     "Une opinion sans preuve",
+     "Une suite de dates sans explication"
+    ],
+    "c": 0,
+    "e": "Les faits doivent être situés et reliés à un raisonnement."
+   }
+  ],
+  "geo": [
+   {
+    "trimestre": 1,
+    "t": "Échelles géographiques",
+    "q": "Pourquoi étudier un phénomène à plusieurs échelles ?",
+    "a": [
+     "Parce que ses causes et effets peuvent varier du local au mondial",
+     "Parce qu'une seule échelle suffit toujours",
+     "Pour supprimer les différences territoriales"
+    ],
+    "c": 0,
+    "e": "Changer d'échelle révèle des acteurs, des dynamiques et des effets différents."
+   },
+   {
+    "trimestre": 2,
+    "t": "Mondialisation",
+    "q": "Quel exemple illustre un flux de la mondialisation ?",
+    "a": [
+     "Le transport international de marchandises",
+     "La rotation de la Terre",
+     "La succession des saisons"
+    ],
+    "c": 0,
+    "e": "Les marchandises, les capitaux, les personnes et les informations circulent entre territoires."
+   },
+   {
+    "trimestre": 3,
+    "t": "Enjeux territoriaux",
+    "q": "Qu'est-ce qu'un aménagement du territoire ?",
+    "a": [
+     "Une action visant à organiser ou transformer un espace",
+     "Une mesure de température",
+     "Un phénomène uniquement naturel"
+    ],
+    "c": 0,
+    "e": "Un aménagement modifie l'organisation d'un espace pour répondre à des objectifs."
+   }
+  ],
+  "info": [
+   {
+    "trimestre": 1,
+    "t": "Programmation",
+    "q": "À quoi sert une fonction en programmation ?",
+    "a": [
+     "À regrouper des instructions réutilisables",
+     "À effacer automatiquement le programme",
+     "À remplacer toutes les variables"
+    ],
+    "c": 0,
+    "e": "Une fonction isole une tâche et peut être appelée plusieurs fois."
+   },
+   {
+    "trimestre": 2,
+    "t": "Réseaux IP",
+    "q": "À quoi sert la passerelle par défaut d'un ordinateur ?",
+    "a": [
+     "À joindre des réseaux extérieurs au réseau local",
+     "À traduire les noms de domaine",
+     "À attribuer une couleur à l'écran"
+    ],
+    "c": 0,
+    "e": "La passerelle dirige le trafic destiné à d'autres réseaux, souvent vers le routeur."
+   },
+   {
+    "trimestre": 3,
+    "t": "Cybersécurité",
+    "q": "Que signifie le principe du moindre privilège ?",
+    "a": [
+     "Donner uniquement les droits nécessaires à une tâche",
+     "Donner les droits administrateur à tous",
+     "Désactiver les comptes inutilisés sans contrôle"
+    ],
+    "c": 0,
+    "e": "Limiter les permissions réduit les conséquences d'une erreur ou d'une compromission."
+   }
+  ]
+ }
+};
+const cycleAllQuestions9and11Base=allQuestions;
+allQuestions=function(){
+ const base=cycleAllQuestions9and11Base();
+ const year=$("#year").value,subject=$("#subject").value,term=$("#term").value;
+ const extra=(((cycleExtraQuestions9and11[year]||{})[subject])||[]).filter(q=>String(q.trimestre)===String(term));
+ const seen=new Set(base.map(q=>q.q));
+ return [...base,...extra.filter(q=>q.q&&!seen.has(q.q))].map((q,i)=>({...q,questionIndex:i,topic:q.t||"Autres"}));
+};
 </script></body></html>

@@ -714,7 +714,7 @@ for(const [subject,notes] of Object.entries(cycleLessonDeepening10)){
  for(const chapter of list){
   const term=Math.max(1,Math.min(3,Number(chapter.trimestre)||1));
   const note=notes[term-1];
-  if(note&&!String(chapter.lesson||"").includes(note)) chapter.lesson=(chapter.lesson||"")+"\\n\\n<strong>Méthode et points de vigilance</strong>\\n"+note;
+  if(note&&!String(chapter.lesson||"").includes(note)) chapter.lesson=(chapter.lesson||"")+"<p><strong>Méthode et points de vigilance</strong></p><p>"+note+"</p>";
  }
 }
 

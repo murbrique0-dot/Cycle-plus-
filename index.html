@@ -382,18 +382,17 @@ function render(){
  vocabSessionKey='cycleplus_vocab_'+y+'_'+lang+'_'+themeKey;
  try{vocabSessionState=JSON.parse(localStorage.getItem(vocabSessionKey)||'{"known":[],"missed":[]}')}catch(e){vocabSessionState={known:[],missed:[]}}
  vocabSessionEntries=window.vocabReviewMode?entries.filter(x=>vocabSessionState.missed.includes(x.i)):entries;
- if(!vocabSessionEntries.length){
-  window.vocabReviewMode=false;
-  v.innerHTML=`<h2>Session terminée !</h2><div class="card"><h3>Ton bilan</h3><p>Cartes connues : <b>${vocabSessionState.known.length}</b></p><p>Cartes à revoir : <b>${vocabSessionState.missed.length}</b></p><p class="muted">Les résultats sont sauvegardés sur cet appareil.</p></div><div class="controls"><button class="primary" onclick="window.vocabReviewMode=true;word=0;render()" ${vocabSessionState.missed.length?'':'disabled'}>Revoir les cartes difficiles (${vocabSessionState.missed.length})</button><button onclick="localStorage.removeItem(vocabSessionKey);window.vocabReviewMode=false;word=0;render()">Recommencer</button></div>`;
+ if(!vocabSessionEntries.length || word>=vocabSessionEntries.length){
+  const remaining=vocabSessionState.missed.length;
+  v.innerHTML=`<h2>Session terminée !</h2><div class="card"><h3>Ton bilan</h3><p>Cartes connues : <b>${vocabSessionState.known.length}</b></p><p>Cartes à revoir : <b>${remaining}</b></p><p class="muted">Les résultats sont sauvegardés sur cet appareil.</p></div><div class="controls"><button class="primary" onclick="window.vocabReviewMode=true;word=0;render()" ${remaining?'':'disabled'}>Revoir les cartes difficiles (${remaining})</button><button onclick="window.vocabReviewMode=false;word=0;render()">Recommencer toutes les cartes</button><button onclick="go('courses')">Retour aux chapitres</button></div>`;
   return;
  }
- if(word>=vocabSessionEntries.length)word=0;
  let entry=vocabSessionEntries[word],w=entry.w;
  v.innerHTML=`<h2>Vocabulaire & flashcards — ${lang==='de'?'Allemand':lang==='en'?'Anglais':'Latin'} · ${y}</h2>
  <p class="muted">Choisis une ou plusieurs listes à réviser. Tu peux mélanger plusieurs thèmes, puis utiliser les flashcards et les exercices de vocabulaire.</p>
  <div class="card"><b>Listes à réviser</b><div class="grid" style="margin-top:10px"><label><input type="checkbox" id="vocabAll" ${selectedThemes.length===themes.length?'checked':''}> Toutes les listes</label>${themes.map((t,i)=>`<label><input type="checkbox" class="vocabThemeChoice" value="${t.replace(/"/g,'&quot;')}" ${selectedThemes.includes(t)?'checked':''}> <b>Vocabulaire ${i+1}</b> — ${t}</label>`).join('')}</div><p class="small muted">${selectedThemes.length} liste(s) sélectionnée(s) · ${entries.length} cartes</p></div>
  <p class="muted">Carte ${word+1} / ${vocabSessionEntries.length} ${window.vocabReviewMode?'· Révision des cartes difficiles':''}</p>
- <div class="lesson flashcard-flip" id="flashcardFlip" role="button" tabindex="0" aria-label="Retourner la carte" aria-pressed="false" onclick="this.classList.toggle(\'is-flipped\');this.setAttribute(\'aria-pressed\',String(this.classList.contains(\'is-flipped\')))"><div class="flashcard-inner"><div class="flashcard-face flashcard-front"><span class="small muted">ALLEMAND</span><div class="flash">${w[0]}</div><span class="small muted">Appuie sur la carte pour voir la traduction</span></div><div class="flashcard-face flashcard-back"><span class="small muted">FRANÇAIS</span><div class="flash">${w[1]}</div><span class="small muted">Appuie à nouveau pour revenir au mot</span></div></div></div>
+ <div class="lesson flashcard-flip" id="flashcardFlip" role="button" tabindex="0" aria-label="Retourner la carte" aria-pressed="false" onclick="this.classList.toggle(\'is-flipped\');this.setAttribute(\'aria-pressed\',String(this.classList.contains(\'is-flipped\')))"><div class="flashcard-inner"><div class="flashcard-face flashcard-front"><span class="small muted">${lang==='de'?'ALLEMAND':lang==='en'?'ANGLAIS':'LATIN'}</span><div class="flash">${w[0]}</div><span class="small muted">Appuie sur la carte pour voir la traduction</span></div><div class="flashcard-face flashcard-back"><span class="small muted">FRANÇAIS</span><div class="flash">${w[1]}</div><span class="small muted">Appuie à nouveau pour revenir au mot</span></div></div></div>
  <div class="controls"><button onclick="markVocab(false)">À revoir</button><button class="primary" onclick="markVocab(true)">Je connais</button></div>
  <p class="small muted">Connues : ${vocabSessionState.known.length} · À revoir : ${vocabSessionState.missed.length}</p>`;
  const flipCard=$('#flashcardFlip');
@@ -424,7 +423,7 @@ function markVocab(known){
  else{remove(vocabSessionState.known,idx);add(vocabSessionState.missed,idx)}
  localStorage.setItem(vocabSessionKey,JSON.stringify(vocabSessionState));
  word++;
- if(word>=vocabSessionEntries.length){word=0;if(window.vocabReviewMode){window.vocabReviewMode=false;vocabSessionState.missed=[];localStorage.setItem(vocabSessionKey,JSON.stringify(vocabSessionState))}}
+ if(word>=vocabSessionEntries.length){if(window.vocabReviewMode)window.vocabReviewMode=false;}
  render();
 }
 function feedbackHTML(c,a){let ok=a===c.c;return `<div class="feedback ${ok?"correct":"incorrect"}">${ok?"Bonne réponse !":"Réponse à revoir."} ${c.e}</div>`}

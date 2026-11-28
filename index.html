@@ -524,10 +524,27 @@ function cycleStartMini(){
  if(lessonIndex!==null){
   const chapter=chapters()[lessonIndex];
   if(!chapter){alert("Ce chapitre n'est plus sélectionné. Retourne à la liste des chapitres.");return;}
-  const pool=allQuestions().filter(q=>q.t===chapter.t);
-  const nested=(chapter.questions||[]).map(q=>({...q,t:q.t||chapter.t,topic:q.t||chapter.t}));
-  const merged=[...pool,...nested.filter(q=>!pool.some(p=>p.q===q.q))];
-  questions=shuffle(merged).slice(0,count).map(q=>({...q,topic:q.t||chapter.t}));
+  const pool=allQuestions().filter(q=>q.t===chapter.t&&q.q&&Array.isArray(q.a)&&Number.isInteger(q.c));
+  const own=chapter.q&&Array.isArray(chapter.a)?[{t:chapter.t,q:chapter.q,a:chapter.a,c:chapter.c,e:chapter.e||"Relis le cours de ce chapitre.",topic:chapter.t}]:[];
+  const nested=(chapter.questions||[]).filter(q=>q.q&&Array.isArray(q.a)&&Number.isInteger(q.c)).map(q=>({...q,t:q.t||chapter.t,topic:q.topic||q.t||chapter.t}));
+  let merged=[...own,...pool,...nested];
+  if(lang==="de"){
+   const bank=(vocabByYear[year]||{}).de||[];
+   const title=(chapter.t+" "+(chapter.lesson||"")).toLocaleLowerCase("fr");
+   const aliases={"Ferien":["vacances","ferien"],"Alltag":["quotidien","routine","alltag"],"École":["école","scolaire","schule"],"Essen":["repas","manger","nourriture","essen"],"Loisirs":["loisirs","hobby","sport"],"Voyage":["voyage","train","gare","reise"],"Wetter":["météo","temps","wetter"],"Connecteurs":["connecteur","liaison","argumentation"]};
+   const matchedThemes=[...new Set(bank.map(w=>w[2]))].filter(theme=>(aliases[theme]||[theme.toLocaleLowerCase("fr")]).some(word=>title.includes(word)));
+   if(matchedThemes.length){
+    const entries=bank.filter(w=>matchedThemes.includes(w[2]));
+    const generated=germanVocabularyQuestions(entries,Math.max(count,entries.length*2));
+    merged.push(...generated.filter(q=>matchedThemes.some(theme=>q.t.endsWith(theme))).map(q=>({...q,topic:q.topic||q.t})));
+   }
+  }
+  const seen=new Set();
+  merged=merged.filter(q=>{if(!q.q||seen.has(q.q))return false;seen.add(q.q);return true;});
+  questions=shuffle(merged).slice(0,count).map(q=>({...q,topic:q.topic||q.t||chapter.t}));
+  if(!questions.length&&chapter.q&&Array.isArray(chapter.a)){
+   questions=[{t:chapter.t,q:chapter.q,a:chapter.a,c:chapter.c,e:chapter.e||"Relis le cours de ce chapitre.",topic:chapter.t}];
+  }
  }else if(isLang){
   const bank=(vocabByYear[year]&&vocabByYear[year][lang])||[],theme=$("#cycleMiniTheme")?$("#cycleMiniTheme").value:"Tous";
   const selected=Array.isArray(window.cycleVocabThemes)&&window.cycleVocabThemes.length?window.cycleVocabThemes:null,entries=bank.filter(w=>selected?selected.includes(w[2]):(theme==="Tous"||w[2]===theme));

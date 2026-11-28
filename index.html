@@ -499,7 +499,7 @@ function cycleSaveMini(){localStorage.setItem("cycleplus_minitests",JSON.stringi
 function cycleMarkDone(i){done[key()+"_"+i]=true;save();cycleOpenLesson(i);}
 function cycleOpenLesson(i){
  const c=chapters()[i],lang=["de","en","la"].includes($("#subject").value);
- $("#view").innerHTML='<button onclick="go(\'courses\')">← Retour aux chapitres</button><span class="pill">'+c.level+'</span><h2>'+c.t+'</h2><div class="grid"><div class="card"><h3>📖 Apprendre</h3><p class="muted">Cours, règles et exemples expliqués.</p><button class="primary" onclick="cycleShowLesson('+i+')">Ouvrir la leçon</button></div><div class="card"><h3>✍️ Mini-test</h3><p class="muted">Vérifie tes connaissances et mesure ta maîtrise.</p><button onclick="cycleStartMini('+i+')">Commencer</button></div>'+(lang?'<div class="card"><h3>🗂️ Flashcards</h3><p class="muted">Apprends le vocabulaire de cette langue.</p><button onclick="go(\'vocab\')">Ouvrir</button></div>':'')+'<div class="card"><h3>🏁 Grande évaluation</h3><p class="muted">Évaluation chronométrée de la matière.</p><button onclick="go(\'evaluation\')">Préparer</button></div></div><div class="lesson"><b>Conseil :</b> commence par apprendre, fais le mini-test, puis revois les notions difficiles.</div>';
+ $("#view").innerHTML='<button onclick="go(\'courses\')">← Retour aux chapitres</button><span class="pill">'+c.level+'</span><h2>'+c.t+'</h2><div class="grid"><div class="card"><h3>📖 Apprendre</h3><p class="muted">Cours, règles et exemples expliqués.</p><button class="primary" onclick="cycleShowLesson('+i+')">Ouvrir la leçon</button></div><div class="card"><h3>✍️ Mini-test</h3><p class="muted">Vérifie tes connaissances et mesure ta maîtrise.</p><button onclick="cycleMiniSetup('+i+')">Commencer</button></div>'+(lang?'<div class="card"><h3>🗂️ Flashcards</h3><p class="muted">Apprends le vocabulaire de cette langue.</p><button onclick="go(\'vocab\')">Ouvrir</button></div>':'')+'<div class="card"><h3>🏁 Grande évaluation</h3><p class="muted">Évaluation chronométrée de la matière.</p><button onclick="go(\'evaluation\')">Préparer</button></div></div><div class="lesson"><b>Conseil :</b> commence par apprendre, fais le mini-test, puis revois les notions difficiles.</div>';
 }
 function cycleShowLesson(i){
  const c=chapters()[i];
@@ -830,13 +830,17 @@ allQuestions=function(){
  }
  return result.map((q,i)=>({...q,questionIndex:i}));
 };
-cycleMiniSetup=function(){
+cycleMiniSetup=function(chapterIndex){
  const lang=$("#subject").value;
- const qs=allQuestions();
- const themes=[...new Set(qs.map(q=>q.t||"Autres").filter(Boolean))];
- const counts=themes.map(t=>({t,n:qs.filter(q=>(q.t||"Autres")===t).length}));
+ const chapter=Number.isInteger(chapterIndex)?chapters()[chapterIndex]:null;
+ const all=allQuestions();
+ const qs=chapter?all.filter(q=>(q.t||"")===chapter.t||(q.topic||"")===chapter.t):all;
+ const available=qs.length?qs:all;
+ const themes=[...new Set(available.map(q=>q.t||"Autres").filter(Boolean))];
+ const counts=themes.map(t=>({t,n:available.filter(q=>(q.t||"Autres")===t).length}));
  const label=subjectLabel();
- $("#view").innerHTML='<h2>Mini-test · '+label+'</h2><p class="muted">Choisis un ou plusieurs thèmes du trimestre, puis le nombre de questions. Les questions sont mélangées et ne sont pas répétées.</p><div class="card"><b>Thèmes à réviser</b><div class="grid" style="margin-top:12px">'+counts.map((x,i)=>'<label><input type="checkbox" class="cycleTopicChoice" value="'+x.t.replace(/"/g,'&quot;')+'" checked> <b>'+x.t+'</b> <span class="small muted">('+x.n+' question(s))</span></label>').join("")+'</div></div><label>Nombre de questions<br><select id="cycleMiniCount">'+[5,10,15,20,30,50,100].map(n=>'<option '+(n===20?'selected':'')+'>'+n+'</option>').join("")+'</select></label><p class="small muted">La plateforme utilise toutes les questions disponibles si la sélection en contient moins que le nombre demandé.</p><div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le test sur mes thèmes</button></div>';
+ window.cycleMiniSourceChapter=chapter?chapter.t:null;
+ $("#view").innerHTML='<h2>Mini-test · '+label+'</h2><p class="muted">'+(chapter?'Mini-test sur le chapitre : <b>'+chapter.t+'</b>.':'Choisis un ou plusieurs thèmes du trimestre.')+' Les questions sont mélangées et ne sont pas répétées.</p><div class="card"><b>Thèmes à réviser</b><div class="grid" style="margin-top:12px">'+counts.map(x=>'<label><input type="checkbox" class="cycleTopicChoice" value="'+x.t.replace(/"/g,'&quot;')+'" checked> <b>'+x.t+'</b> <span class="small muted">('+x.n+' question(s))</span></label>').join("")+'</div></div><label>Nombre de questions<br><select id="cycleMiniCount">'+[5,10,15,20,30,50,100].map(n=>'<option '+(n===20?'selected':'')+'>'+n+'</option>').join("")+'</select></label><p class="small muted">La plateforme utilise toutes les questions disponibles si la sélection en contient moins que le nombre demandé.</p><div class="controls"><button class="primary" onclick="cycleStartMini()">Commencer le test</button></div>';
 };
 cycleStartMini=function(){
  const lang=$("#subject").value;
